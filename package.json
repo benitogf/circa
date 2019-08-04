@@ -16,7 +16,7 @@
     "react-scripts": "3.0.1",
     "react-swipeable-views": "^0.13.3",
     "react-swipeable-views-utils": "^0.13.3",
-    "samo-js-client": "^6.0.0",
+    "samo-js-client": "^6.0.2",
     "tus-js-client": "^1.8.0-1"
   },
   "scripts": {
