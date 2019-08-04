@@ -123,7 +123,7 @@ export default ({ publish, box, afterCreate, authorize }) => {
   const remove = async () => {
     try {
       setLoading(true)
-      await unpublish('/boxes/' + box.index, authorize)
+      await unpublish('boxes/' + box.index, authorize)
     } catch (e) {
       setFail(`Something went wrong (${e && e.response ? await e.response.text() : 'unable to connect to the server'})`)
       setLoading(false)

@@ -34,7 +34,7 @@ const rootStyles = makeStyles((theme) => ({
 export default ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
-  const [things, socket] = useSubscribe('/mo/things/' + match.params.id + '/' + account, authorize)
+  const [things, socket] = useSubscribe('things/' + match.params.id + '/' + account + '/*', authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const loaded = things !== null
 

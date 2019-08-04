@@ -16,7 +16,7 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 export default ({ match, authorize }) => {
-  const [mail] = useSubscribe('/sa/mails/' + match.params.id, authorize)
+  const [mail] = useSubscribe('mails/' + match.params.id, authorize)
   const styles = rootStyles()
 
   return (!mail) ? (<LinearProgress />) : (

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { api } from './api'
-import { Base64 } from 'js-base64'
+import { publish } from './api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import AppBar from '@material-ui/core/AppBar'
@@ -114,15 +113,11 @@ export default () => {
 
     try {
       setLoading(true)
-      await api.post('r/mo/mails', {
-        json: {
-          data: Base64.encode(JSON.stringify({
-            email,
-            phone,
-            message
-          }))
-        }
-      }).json()
+      await publish('mails/*', {
+        email,
+        phone,
+        message
+      })
       setError('')
       setSent(`we appreciate your interest and will get back to you prompty through ${email} or ${phone}`)
       setLoading(false)
@@ -134,7 +129,7 @@ export default () => {
   }
 
   return (sent ? (
-    <Typography className={body.title} variant="p" component="h2">
+    <Typography className={body.title} component="h2">
       <b>Thanks!</b> {sent}
     </Typography>
   ) : (<div className={body.root}>

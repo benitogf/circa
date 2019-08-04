@@ -129,7 +129,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
   const remove = async () => {
     try {
       setLoading(true)
-      await unpublish('/posts/' + post.index, authorize)
+      await unpublish('posts/' + post.index, authorize)
     } catch (e) {
       setFail(`Something went wrong (${e && e.response ? await e.response.text() : 'unable to connect to the server'})`)
       setLoading(false)

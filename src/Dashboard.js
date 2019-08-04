@@ -114,7 +114,7 @@ const appStyles = makeStyles((theme) => ({
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
 
 export default withRouter(({ location, status, authorize, dispatch }) => {
-  const [time, socket] = useSubscribe('/time', authorize)
+  const [time, socket] = useSubscribe(null, authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const [mobileOpen, setMobileOpen] = useState(false)
   const role = window.localStorage.getItem('role')
@@ -189,7 +189,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
               to: '/dashboard/things',
               // activeStyle
             }}>
-            <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
+            <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
             <ListItemText primary={'Things'} />
           </ListItem>
         )}
@@ -206,7 +206,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
               to: '/dashboard/posts',
               // activeStyle
             }}>
-            <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
+            <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
             <ListItemText primary={'Posts'} />
           </ListItem>
         )}
@@ -223,7 +223,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
               to: '/dashboard/mails',
               // activeStyle
             }}>
-            <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
+            <ListItemIcon>{<Icon>email</Icon>}</ListItemIcon>
             <ListItemText primary={'Mails'} />
           </ListItem>
         )}

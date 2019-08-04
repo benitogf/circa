@@ -52,10 +52,9 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 export default ({ match, authorize }) => {
-  // const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
-  const [post, socket] = useSubscribe('/sa/posts/' + match.params.id, authorize)
-  const publish = usePublish('/sa/posts/' + match.params.id, authorize)
+  const [post, socket] = useSubscribe('posts/' + match.params.id, authorize)
+  const publish = usePublish('posts/' + match.params.id, authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('md'))

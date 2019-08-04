@@ -10,8 +10,6 @@ const prefixUrl = protocol + domain
 
 export const api = ky.extend({ prefixUrl })
 
-const isRestApi = (url) => url[0] === '/'
-
 export const upload = async (fileUrl) =>
   new Promise((resolve, reject) => {
     window.fetch(fileUrl)
@@ -47,7 +45,7 @@ export const upload = async (fileUrl) =>
 export const fetch = async (url, authorize) => {
   try {
     const token = window.localStorage.getItem('token')
-    return await api.get((isRestApi(url) ? 'r' : '') + url, {
+    return await api.get(url, {
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -58,7 +56,7 @@ export const fetch = async (url, authorize) => {
       try {
         await authorize(e)
         const refreshToken = window.localStorage.getItem('token')
-        return await api.get((isRestApi(url) ? 'r' : '') + url, {
+        return await api.get(url, {
           headers: {
             'Authorization': 'Bearer ' + refreshToken
           }
@@ -75,7 +73,7 @@ export const fetch = async (url, authorize) => {
 export const unpublish = async (url, authorize) => {
   try {
     const token = window.localStorage.getItem('token')
-    return await api.delete((isRestApi(url) ? 'r' : '') + url, {
+    return await api.delete(url, {
       headers: {
         'Authorization': 'Bearer ' + token
       }
@@ -86,7 +84,7 @@ export const unpublish = async (url, authorize) => {
       try {
         await authorize(e)
         const refreshToken = window.localStorage.getItem('token')
-        return await api.delete((isRestApi(url) ? 'r' : '') + url, {
+        return await api.delete(url, {
           headers: {
             'Authorization': 'Bearer ' + refreshToken
           }
@@ -103,11 +101,11 @@ export const unpublish = async (url, authorize) => {
 export const publish = async (url, data, authorize) => {
   try {
     const token = window.localStorage.getItem('token')
-    await api.post((isRestApi(url) ? 'r' : '') + url, {
+    await api.post(url, {
       headers: {
         'Authorization': 'Bearer ' + token
       },
-      json: isRestApi(url) ? {
+      json: url.indexOf('user/') !== 0 ? {
         data: Base64.encode(JSON.stringify(data))
       } : data
     }).json()
@@ -117,11 +115,11 @@ export const publish = async (url, data, authorize) => {
       try {
         await authorize(e)
         const refreshToken = window.localStorage.getItem('token')
-        await api.post((isRestApi(url) ? 'r' : '') + url, {
+        await api.post(url, {
           headers: {
             'Authorization': 'Bearer ' + refreshToken
           },
-          json: isRestApi(url) ? {
+          json: url.indexOf('user/') !== 0 ? {
             data: Base64.encode(JSON.stringify(data))
           } : data
         }).json()
@@ -177,7 +175,7 @@ export const subscribe = (url, socket, authorize, dispatch) => () => {
     dispatch({
       type: 'open',
       data: Samo(
-        domain + url,
+        domain + (url ? '/' + url : ''),
         ssl,
         ['bearer', token]
       )

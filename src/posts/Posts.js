@@ -95,8 +95,8 @@ export default ({ authorize }) => {
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
   // socket
-  const [posts, socket] = useSubscribe('/mo/posts', authorize)
-  const publish = usePublish('/mo/posts', authorize)
+  const [posts, socket] = useSubscribe('posts/*', authorize)
+  const publish = usePublish('posts/*', authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
 
   const theme = useTheme()

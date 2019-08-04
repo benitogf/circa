@@ -24,7 +24,7 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 export default ({ authorize }) => {
-  const [mails] = useSubscribe('/mo/mails', authorize)
+  const [mails] = useSubscribe('mails/*', authorize)
 
   const styles = rootStyles()
 

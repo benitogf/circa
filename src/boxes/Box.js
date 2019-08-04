@@ -88,9 +88,9 @@ export default ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
-  const [box, socket] = useSubscribe('/sa/boxes/' + match.params.id, authorize)
-  const publish = usePublish('/sa/boxes/' + match.params.id, authorize)
-  const publishThing = usePublish('/mo/things/' + match.params.id + '/' + account, authorize)
+  const [box, socket] = useSubscribe('boxes/' + match.params.id, authorize)
+  const publish = usePublish('boxes/' + match.params.id, authorize)
+  const publishThing = usePublish('things/' + match.params.id + '/' + account + '/*', authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const canEdit = role === 'admin' || role === 'root'
 
