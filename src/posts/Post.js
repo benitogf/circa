@@ -29,7 +29,8 @@ const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
     background: 'transparent',
-    overflow: 'auto'
+    overflow: 'auto',
+    flex: 1
   },
   list: {
     padding: 0,

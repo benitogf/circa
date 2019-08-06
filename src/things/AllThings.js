@@ -11,7 +11,9 @@ import Divider from '@material-ui/core/Divider'
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    background: 'transparent'
+    background: 'transparent',
+    overflow: 'auto',
+    flex: 1
   },
   list: {
     padding: 0,

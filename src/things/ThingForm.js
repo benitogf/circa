@@ -33,7 +33,6 @@ const rootStyles = makeStyles((theme) => ({
   warning: {
     backgroundColor: '#f1932c',
     maxWidth: 'unset',
-    minWidth: 'unset',
     marginBottom: 10,
     margin: '1em'
   },
@@ -50,7 +49,14 @@ const rootStyles = makeStyles((theme) => ({
   form: {
     padding: '1em',
     maxWidth: 700,
-    margin: '0 auto'
+    flex: 1,
+    [theme.breakpoints.down('sm')]: {
+      display: 'flex',
+      flexDirection: 'column',
+    },
+    [theme.breakpoints.up('md')]: {
+      margin: '0 auto',
+    }
   },
   formSubmit: {
     marginTop: 20,

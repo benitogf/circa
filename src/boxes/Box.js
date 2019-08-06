@@ -44,20 +44,11 @@ const rootStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     flex: '1 1',
     background: 'transparent',
-  },
-  boxesList: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1 1',
-    overflow: 'auto'
-  },
-  tabs: {
-    top: 132
+    overflowY: 'auto'
   },
   tabRoot: {
     display: 'flex',
     flex: '1 1',
-    overflowY: 'auto',
   },
   list: {
     padding: 0,
@@ -75,12 +66,14 @@ const rootStyles = makeStyles((theme) => ({
   text: {
     overflowWrap: 'break-word',
     padding: '1em'
+  },
+  formTab: {
+    position: 'absolute',
+    width: "100%"
   }
 }))
 
 const tabsContainerStyle = {
-  marginTop: -180,
-  paddingTop: 180,
   flex: '1 1 0%'
 }
 
@@ -110,35 +103,34 @@ export default ({ match, authorize }) => {
     return (<Redirect to="/dashboard/boxes" />)
   }
 
-  return <Paper className={styles.root} elevation={1}>
-    <div className={styles.root}>
-      <AppBar className={styles.tabs} position="sticky" color="default">
-        <Tabs
-          value={tab}
-          onChange={(_e, index) => changeTab(index)}
-          indicatorColor="primary"
-          textColor="primary"
-          variant={mobile ? 'fullWidth' : 'standard'}
-        >
-          <Tab disableTouchRipple label="Box" />
-          <Tab disableTouchRipple label="New thing" />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={tab}
-        onChangeIndex={changeTab}
-        containerStyle={tabsContainerStyle}
-        className={styles.tabRoot}
+  return <Paper className={styles.root} elevation={0}>
+    <AppBar position="sticky" color="default">
+      <Tabs
+        value={tab}
+        onChange={(_e, index) => changeTab(index)}
+        indicatorColor="primary"
+        textColor="primary"
+        variant={mobile ? 'fullWidth' : 'standard'}
       >
-        <TabContainer dir={theme.direction}>
-          <Header active={active} box={box} styles={styles} />
-          {!box ? <LinearProgress /> : (<div>
-            {canEdit &&
-              <BoxForm publish={publish} box={box} authorize={authorize} />}
-            <Things match={match} authorize={authorize} /></div>)}
-        </TabContainer>
-        <TabContainer dir={theme.direction}>
+        <Tab disableTouchRipple label="Box" />
+        <Tab disableTouchRipple label="New thing" />
+      </Tabs>
+    </AppBar>
+    <SwipeableViews
+      axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+      index={tab}
+      onChangeIndex={changeTab}
+      containerStyle={tabsContainerStyle}
+      className={styles.tabRoot}
+    >
+      <TabContainer dir={theme.direction}>
+        <Header active={active} box={box} styles={styles} />
+        {!box && <LinearProgress />}
+        {box && canEdit && <BoxForm publish={publish} box={box} authorize={authorize} />}
+        {box && <Things match={match} authorize={authorize} />}
+      </TabContainer>
+      <TabContainer dir={theme.direction}>
+        <div className={styles.formTab}>
           <List className={styles.list}
             component="nav">
             <ListItem className={styles.listHeader}>
@@ -147,8 +139,8 @@ export default ({ match, authorize }) => {
           </List>
           {!box ? <LinearProgress /> :
             <ThingForm boxId={box.index} publish={publishThing} afterCreate={() => setTab(0)} authorize={authorize} />}
-        </TabContainer>
-      </SwipeableViews>
-    </div>
+        </div>
+      </TabContainer>
+    </SwipeableViews>
   </Paper>
 }

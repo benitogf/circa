@@ -61,7 +61,7 @@ export default ({ match, authorize }) => {
     return (<Redirect to={"/dashboard/box/" + match.params.boxId} />)
   }
 
-  return <Paper className={styles.root} elevation={1}>
+  return <Paper className={styles.root} elevation={0}>
     <Header active={active} thing={thing} styles={styles} />
     {!thing ? <LinearProgress /> : <ThingForm boxId={match.params.boxId} publish={publish} thing={thing} authorize={authorize} />}
   </Paper>

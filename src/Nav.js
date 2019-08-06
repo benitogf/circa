@@ -24,6 +24,10 @@ const navStyles = makeStyles(theme => ({
       textDecoration: 'underline'
     }
   },
+  link: {
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
+  },
   signUp: {
     marginRight: props => props.location.pathname !== '/login' ? '6px' : '0',
     textTransform: 'unset'
@@ -32,17 +36,13 @@ const navStyles = makeStyles(theme => ({
     background: theme.palette.grey[400],
     textTransform: 'unset'
   },
-  link: {
-    color: theme.palette.text.primary,
-    textDecoration: 'none',
-  },
   subtitle: {
     fontWeight: '500',
     fontSize: '0.88em'
   }
 }));
 
-export default withRouter(({ location, status }) => {
+export default withRouter(({ location }) => {
   const mobile = useTheme().breakpoints.down('xs')
   const styles = navStyles({
     mobile,
@@ -56,7 +56,7 @@ export default withRouter(({ location, status }) => {
         <Typography className={styles.title} variant="h5" component="h3">
           <Link className={styles.link} to={'/'}>circa</Link>
         </Typography>
-        {status !== 'authorized' && <Typography className={styles.subtitle} component="p">Data engeneering</Typography>}
+        <Typography className={styles.subtitle} component="p">Data engeneering</Typography>
       </div>
       <Grid direction="row"
         justify="flex-end"
@@ -64,13 +64,13 @@ export default withRouter(({ location, status }) => {
         container
         spacing={4}>
         <Grid item>
-          {location.pathname !== '/signup' && status === 'unauthorized' && (<Button variant="contained"
+          {location.pathname !== '/signup' && (<Button variant="contained"
             className={styles.signUp}
             component={Link}
             {...{ to: '/signup' }} color="secondary">
             Sign up
             </Button>)}
-          {location.pathname !== '/login' && status === 'unauthorized' && (<Button variant="contained"
+          {location.pathname !== '/login' && (<Button variant="contained"
             component={Link}
             className={styles.logIn}
             {...{ to: '/login' }}>

@@ -17,6 +17,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
+import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Boxes from './boxes/Boxes'
 import Box from './boxes/Box'
@@ -42,10 +43,24 @@ const toolbarStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#d5e4f1' : '#383838',
     height: 65,
     minHeight: 65,
-    paddingTop: 67,
+    paddingTop: 0,
     position: 'sticky',
     top: 0,
     zIndex: 2
+  },
+  title: {
+    fontStyle: 'italic',
+    fontWeight: '100',
+    fontVariant: 'small-caps',
+    flex: 1,
+    paddingBottom: 5,
+    '&:hover': {
+      textDecoration: 'underline'
+    }
+  },
+  titleLink: {
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -54,14 +69,14 @@ const toolbarStyles = makeStyles((theme) => ({
     },
   },
   drawerPaper: {
-    width: drawerWidth,
-    marginTop: 67
+    width: drawerWidth
   },
   menuContainer: {
     display: 'flex',
     alignItems: 'center'
   },
   menuButton: {
+    marginRight: 10,
     [theme.breakpoints.up('sm')]: {
       display: 'none',
     },
@@ -73,6 +88,9 @@ const toolbarStyles = makeStyles((theme) => ({
     maxWidth: '10em',
     textAlign: 'end',
     color: (props) => props.lights ? 'black' : 'white',
+  },
+  breadcrumbBar: {
+    background: (props) => props.lights ? '#d5e4f1' : '#424242',
   },
   breadcrumbs: {
     background: (props) => props.lights ? '#f5faff' : '#4c4c4c',
@@ -92,11 +110,7 @@ const appStyles = makeStyles((theme) => ({
     },
     display: 'flex',
     flexDirection: 'column',
-    flex: '1 1',
-    overflowY: 'auto'
-  },
-  loader: {
-    marginTop: 67
+    flex: '1 1'
   },
   route: {
     display: 'flex',
@@ -146,123 +160,120 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   }
 
   const drawer = (
-    <div>
+    <List className={app.menu}>
+      <ListItem button
+        key={'Dashboard'}
+        component={Link}
+        onClick={() => setMobileOpen(false)}
+        {...{
+          disableTouchRipple: true,
+          // exact: true,
+          // activeStyle,
+          to: '/dashboard'
+        }}>
+        <ListItemIcon>{<Icon>dashboard</Icon>}</ListItemIcon>
+        <ListItemText primary={'Dashboard'} />
+      </ListItem>
       <Divider />
-      <List className={app.menu}>
-        <ListItem button
-          key={'Dashboard'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            // exact: true,
-            // activeStyle,
-            to: '/dashboard'
-          }}>
-          <ListItemIcon>{<Icon>dashboard</Icon>}</ListItemIcon>
-          <ListItemText primary={'Dashboard'} />
-        </ListItem>
+      <ListItem button
+        key={'Boxes demo'}
+        component={Link}
+        onClick={() => setMobileOpen(false)}
+        {...{
+          disableTouchRipple: true,
+          to: '/dashboard/boxes',
+          // activeStyle,
+          // isActive: () => isBox || isThing || isBoxes
+        }}>
+        <ListItemIcon>{<Icon>developer_board</Icon>}</ListItemIcon>
+        <ListItemText primary={'Boxes demo'} />
+      </ListItem>
+      {role === 'root' && (
         <Divider />
+      )}
+      {role === 'root' && (
         <ListItem button
-          key={'Boxes demo'}
+          key={'Things'}
           component={Link}
           onClick={() => setMobileOpen(false)}
           {...{
             disableTouchRipple: true,
-            to: '/dashboard/boxes',
-            // activeStyle,
-            // isActive: () => isBox || isThing || isBoxes
-          }}>
-          <ListItemIcon>{<Icon>developer_board</Icon>}</ListItemIcon>
-          <ListItemText primary={'Boxes demo'} />
-        </ListItem>
-        {role === 'root' && (
-          <Divider />
-        )}
-        {role === 'root' && (
-          <ListItem button
-            key={'Things'}
-            component={Link}
-            onClick={() => setMobileOpen(false)}
-            {...{
-              disableTouchRipple: true,
-              to: '/dashboard/things',
-              // activeStyle
-            }}>
-            <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
-            <ListItemText primary={'Things'} />
-          </ListItem>
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Divider />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <ListItem button
-            key={'Posts'}
-            component={Link}
-            onClick={() => setMobileOpen(false)}
-            {...{
-              disableTouchRipple: true,
-              to: '/dashboard/posts',
-              // activeStyle
-            }}>
-            <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
-            <ListItemText primary={'Posts'} />
-          </ListItem>
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Divider />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <ListItem button
-            key={'Mails'}
-            component={Link}
-            onClick={() => setMobileOpen(false)}
-            {...{
-              disableTouchRipple: true,
-              to: '/dashboard/mails',
-              // activeStyle
-            }}>
-            <ListItemIcon>{<Icon>email</Icon>}</ListItemIcon>
-            <ListItemText primary={'Mails'} />
-          </ListItem>
-        )}
-        {role === 'root' && (
-          <Divider />
-        )}
-        {role === 'root' && (
-          <ListItem button
-            key={'Users'}
-            component={Link}
-            onClick={() => setMobileOpen(false)}
-            {...{
-              disableTouchRipple: true,
-              to: '/dashboard/users',
-              // activeStyle
-            }}>
-            <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
-            <ListItemText primary={'Users'} />
-          </ListItem>
-        )}
-        <Divider />
-        <ListItem button
-          key={'Settings'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            to: '/dashboard/settings',
+            to: '/dashboard/things',
             // activeStyle
           }}>
-          <ListItemIcon>{<Icon>settings</Icon>}</ListItemIcon>
-          <ListItemText primary={'Settings'} />
+          <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
+          <ListItemText primary={'Things'} />
         </ListItem>
-      </List>
+      )}
+      {(role === 'admin' || role === 'root') && (
+        <Divider />
+      )}
+      {(role === 'admin' || role === 'root') && (
+        <ListItem button
+          key={'Posts'}
+          component={Link}
+          onClick={() => setMobileOpen(false)}
+          {...{
+            disableTouchRipple: true,
+            to: '/dashboard/posts',
+            // activeStyle
+          }}>
+          <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
+          <ListItemText primary={'Posts'} />
+        </ListItem>
+      )}
+      {(role === 'admin' || role === 'root') && (
+        <Divider />
+      )}
+      {(role === 'admin' || role === 'root') && (
+        <ListItem button
+          key={'Mails'}
+          component={Link}
+          onClick={() => setMobileOpen(false)}
+          {...{
+            disableTouchRipple: true,
+            to: '/dashboard/mails',
+            // activeStyle
+          }}>
+          <ListItemIcon>{<Icon>email</Icon>}</ListItemIcon>
+          <ListItemText primary={'Mails'} />
+        </ListItem>
+      )}
+      {role === 'root' && (
+        <Divider />
+      )}
+      {role === 'root' && (
+        <ListItem button
+          key={'Users'}
+          component={Link}
+          onClick={() => setMobileOpen(false)}
+          {...{
+            disableTouchRipple: true,
+            to: '/dashboard/users',
+            // activeStyle
+          }}>
+          <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
+          <ListItemText primary={'Users'} />
+        </ListItem>
+      )}
       <Divider />
-    </div>
+      <ListItem button
+        key={'Settings'}
+        component={Link}
+        onClick={() => setMobileOpen(false)}
+        {...{
+          disableTouchRipple: true,
+          to: '/dashboard/settings',
+          // activeStyle
+        }}>
+        <ListItemIcon>{<Icon>settings</Icon>}</ListItemIcon>
+        <ListItemText primary={'Settings'} />
+      </ListItem>
+      <Divider />
+    </List>
   )
 
-  return (!time) ? (<LinearProgress className={app.loader} />) : (
+  return (!time) ? (<LinearProgress />) : (
     <div className={app.root}>
       <Toolbar className={toolbar.root}>
         <div className={toolbar.menuContainer}>
@@ -275,26 +286,31 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           >
             <Icon>menu</Icon>
           </IconButton>
-          {showBreadcrumbs && <Breadcrumbs className={toolbar.breadcrumbs} aria-label="Breadcrumb">
-            {isBox && (
-              <Link className={toolbar.breadcrumb} to="/dashboard/boxes">Boxes</Link>
-            )}
-            {isPost && (
-              <Link className={toolbar.breadcrumb} to="/dashboard/posts">Posts</Link>
-            )}
-            {isMail && (
-              <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
-            )}
-            {isThing && (
-              <Link className={toolbar.breadcrumb}
-                to={`/dashboard/box/${pathname[3]}`}>Box</Link>
-            )}
-          </Breadcrumbs>}
         </div>
+        <Typography className={toolbar.title} variant="h5" component="h3">
+          <Link className={toolbar.titleLink} to={'/'}>circa</Link>
+        </Typography>
         <div className={toolbar.date}>
           {(() => active ? <DateDisplay time={time} /> : <CircularProgress size={24} />)()}
         </div>
       </Toolbar>
+      {showBreadcrumbs && <Toolbar className={toolbar.breadcrumbBar}>
+        <Breadcrumbs className={toolbar.breadcrumbs} aria-label="Breadcrumb">
+          {isBox && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/boxes">Boxes</Link>
+          )}
+          {isPost && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/posts">Posts</Link>
+          )}
+          {isMail && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
+          )}
+          {isThing && (
+            <Link className={toolbar.breadcrumb}
+              to={`/dashboard/box/${pathname[3]}`}>Box</Link>
+          )}
+        </Breadcrumbs>
+      </Toolbar>}
       <nav className={toolbar.drawer} aria-label="Main menu">
         <Hidden smUp implementation="css">
           <Drawer

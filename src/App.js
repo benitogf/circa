@@ -79,7 +79,7 @@ export default () => {
   }
 
   return (<MuiThemeProvider theme={theme}><Router>
-    <Nav status={status} />
+    {status !== "authorized" && <Nav />}
     <Switch>
       <Route exact path="/" render={(props) =>
         <Home {...props} status={status} />} />
@@ -89,9 +89,6 @@ export default () => {
         dispatch({ type: "status", data: 'unauthorized' })
         return <Redirect to="/" />
       }} />
-      {/* <Route exact path="/android_asset/www/index.html" render={() => {
-        return <Redirect to="/" />
-      }} /> */}
       <Route exact path="/login" render={(props) =>
         <Login {...props} status={status} authorize={authorize} />} />
       <Route exact path="/signup" render={(props) =>

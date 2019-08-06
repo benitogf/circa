@@ -48,16 +48,14 @@ const rootStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
-    background: 'transparent'
+    background: 'transparent',
+    overflowY: 'auto',
   },
   postsList: {
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
     overflow: 'auto'
-  },
-  tabs: {
-    top: 132
   },
   tabRoot: {
     display: 'flex',
@@ -86,8 +84,6 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 const tabsContainerStyle = {
-  marginTop: -180,
-  paddingTop: 180,
   flex: '1 1 0%'
 }
 
@@ -115,7 +111,7 @@ export default ({ authorize }) => {
 
   return <Paper className={styles.root} elevation={0}>
     {(() => role === 'admin' || role === 'root' ? (<div className={styles.root}>
-      <AppBar className={styles.tabs} position="sticky" color="default">
+      <AppBar position="sticky" color="default">
         <Tabs
           value={tab}
           onChange={(_e, index) => changeTab(index)}
