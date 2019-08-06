@@ -10,7 +10,8 @@ import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Hidden from '@material-ui/core/Hidden'
 import Divider from '@material-ui/core/Divider'
-import Drawer from '@material-ui/core/Drawer'
+// import Drawer from '@material-ui/core/Drawer'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -62,6 +63,13 @@ const toolbarStyles = makeStyles((theme) => ({
     color: theme.palette.text.primary,
     textDecoration: 'none',
   },
+  logo: {
+    height: 20,
+    verticalAlign: 'middle',
+    marginRight: 34,
+    marginLeft: 1,
+    filter: (props) => props.lights ? 'brightness(0.5)' : 'none',
+  },
   drawer: {
     [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
@@ -90,7 +98,7 @@ const toolbarStyles = makeStyles((theme) => ({
     color: (props) => props.lights ? 'black' : 'white',
   },
   breadcrumbBar: {
-    background: (props) => props.lights ? '#d5e4f1' : '#424242',
+    background: (props) => props.lights ? '#a2c4e2' : '#424242',
   },
   breadcrumbs: {
     background: (props) => props.lights ? '#f5faff' : '#4c4c4c',
@@ -161,6 +169,12 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
 
   const drawer = (
     <List className={app.menu}>
+      <ListItem>
+        <Typography className={toolbar.title} variant="h5" component="h3">
+          <img alt="circa, data engeneering" className={toolbar.logo} src="/logo.png"></img><Link className={toolbar.titleLink} to={'/dashboard'}>circa</Link>
+        </Typography>
+      </ListItem>
+      <Divider />
       <ListItem button
         key={'Dashboard'}
         component={Link}
@@ -287,9 +301,11 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
             <Icon>menu</Icon>
           </IconButton>
         </div>
-        <Typography className={toolbar.title} variant="h5" component="h3">
-          <Link className={toolbar.titleLink} to={'/'}>circa</Link>
-        </Typography>
+        <Hidden smUp>
+          <Typography className={toolbar.title} variant="h5" component="h3">
+            <Link className={toolbar.titleLink} to={'/'}>circa</Link>
+          </Typography>
+        </Hidden>
         <div className={toolbar.date}>
           {(() => active ? <DateDisplay time={time} /> : <CircularProgress size={24} />)()}
         </div>
@@ -313,7 +329,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
       </Toolbar>}
       <nav className={toolbar.drawer} aria-label="Main menu">
         <Hidden smUp implementation="css">
-          <Drawer
+          <SwipeableDrawer
             variant="temporary"
             anchor={'left'}
             open={mobileOpen}
@@ -326,10 +342,10 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
             }}
           >
             {drawer}
-          </Drawer>
+          </SwipeableDrawer>
         </Hidden>
         <Hidden xsDown implementation="css">
-          <Drawer
+          <SwipeableDrawer
             classes={{
               paper: toolbar.drawerPaper,
             }}
@@ -337,7 +353,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
             open
           >
             {drawer}
-          </Drawer>
+          </SwipeableDrawer>
         </Hidden>
       </nav>
       <Switch>
