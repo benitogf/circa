@@ -1,38 +1,21 @@
 import React, { useState } from 'react'
-import { Route, Link, Redirect, Switch, withRouter } from 'react-router-dom'
+import { Link, Redirect, withRouter } from 'react-router-dom'
 import { useSubscribe } from './api'
 import moment from 'moment'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Toolbar from '@material-ui/core/Toolbar'
-import Paper from '@material-ui/core/Paper'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Hidden from '@material-ui/core/Hidden'
-import Divider from '@material-ui/core/Divider'
-// import Drawer from '@material-ui/core/Drawer'
+import Drawer from '@material-ui/core/Drawer'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import Icon from '@material-ui/core/Icon'
 import IconButton from '@material-ui/core/IconButton'
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Boxes from './boxes/Boxes'
-import Box from './boxes/Box'
-import Thing from './things/Thing'
-import Posts from './posts/Posts'
-import Post from './posts/Post'
-import Mails from './mails/Mails'
-import Mail from './mails/Mail'
-import Users from './users/Users'
-import User from './users/User'
-import Locks from './Locks'
-import Settings from './Settings'
-import R404 from './404'
-import AllThings from './things/AllThings'
+import Router from './Router'
+import Menu from './Menu'
 
 const drawerWidth = 240;
 
@@ -54,21 +37,8 @@ const toolbarStyles = makeStyles((theme) => ({
     fontWeight: '100',
     fontVariant: 'small-caps',
     flex: 1,
-    paddingBottom: 5,
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  },
-  titleLink: {
+    padding: '0.37em 0',
     color: theme.palette.text.primary,
-    textDecoration: 'none',
-  },
-  logo: {
-    height: 20,
-    verticalAlign: 'middle',
-    marginRight: 34,
-    marginLeft: 1,
-    filter: (props) => props.lights ? 'brightness(0.5)' : 'none',
   },
   drawer: {
     [theme.breakpoints.up('sm')]: {
@@ -108,6 +78,12 @@ const toolbarStyles = makeStyles((theme) => ({
   breadcrumb: {
     color: theme.palette.primary.main,
     fontSize: '0.9em'
+  },
+  breadcrumbOff: {
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
+    pointerEvents: 'none',
+    fontSize: '0.9em',
   }
 }))
 
@@ -119,17 +95,6 @@ const appStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1'
-  },
-  route: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '10px 20px',
-    boxShadow: 'none',
-    borderRadius: 0
-  },
-  menu: {
-    padding: 0
   }
 }))
 
@@ -139,7 +104,6 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   const [time, socket] = useSubscribe(null, authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const [mobileOpen, setMobileOpen] = useState(false)
-  const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
   const toolbar = toolbarStyles({
     mobile: useMediaQuery(useTheme().breakpoints.down('xs')),
@@ -148,144 +112,22 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   })
   const app = appStyles()
   const pathname = location.pathname.split('/')
+  const isDashboard = pathname.length === 2
+  const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
   const isBox = pathname.length > 3 && pathname[2] === 'box'
-  const isPost = pathname.length > 3 && pathname[2] === 'post'
   const isThing = pathname.length > 4 && pathname[4] === 'thing'
+  const isPosts = pathname.length > 2 && pathname[2] === 'posts'
+  const isPost = pathname.length > 3 && pathname[2] === 'post'
+  const isUsers = pathname.length > 2 && pathname[2] === 'users'
+  const isUser = pathname.length > 3 && pathname[2] === 'user'
+  const isMails = pathname.length > 2 && pathname[2] === 'mails'
   const isMail = pathname.length > 3 && pathname[2] === 'mail'
-  const showBreadcrumbs = isBox || isPost || isThing || isMail
-  // const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
-  // const activeLink = lights ? '#efefef' : 'rgb(88, 88, 88)'
-  // https://reacttraining.com/react-router/web/api/NavLink
-  // this trigers a re-render on each time tick
-  // disabling for now
-  // const activeStyle = {
-  //   background: activeLink
-  // }
-  // const NavLinkRef = forwardRef((props, ref) => <NavLink {...props} innerRef={ref} />)
+  const isSettings = pathname.length > 2 && pathname[2] === 'settings'
+
 
   if (status === 'unauthorized') {
     return (<Redirect to="/login" />)
   }
-
-  const drawer = (
-    <List className={app.menu}>
-      <ListItem>
-        <Typography className={toolbar.title} variant="h5" component="h3">
-          <img alt="circa, data engeneering" className={toolbar.logo} src="/logo.png"></img><Link className={toolbar.titleLink} to={'/dashboard'}>circa</Link>
-        </Typography>
-      </ListItem>
-      <Divider />
-      <ListItem button
-        key={'Dashboard'}
-        component={Link}
-        onClick={() => setMobileOpen(false)}
-        {...{
-          disableTouchRipple: true,
-          // exact: true,
-          // activeStyle,
-          to: '/dashboard'
-        }}>
-        <ListItemIcon>{<Icon>dashboard</Icon>}</ListItemIcon>
-        <ListItemText primary={'Dashboard'} />
-      </ListItem>
-      <Divider />
-      <ListItem button
-        key={'Boxes demo'}
-        component={Link}
-        onClick={() => setMobileOpen(false)}
-        {...{
-          disableTouchRipple: true,
-          to: '/dashboard/boxes',
-          // activeStyle,
-          // isActive: () => isBox || isThing || isBoxes
-        }}>
-        <ListItemIcon>{<Icon>developer_board</Icon>}</ListItemIcon>
-        <ListItemText primary={'Boxes demo'} />
-      </ListItem>
-      {role === 'root' && (
-        <Divider />
-      )}
-      {role === 'root' && (
-        <ListItem button
-          key={'Things'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            to: '/dashboard/things',
-            // activeStyle
-          }}>
-          <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
-          <ListItemText primary={'Things'} />
-        </ListItem>
-      )}
-      {(role === 'admin' || role === 'root') && (
-        <Divider />
-      )}
-      {(role === 'admin' || role === 'root') && (
-        <ListItem button
-          key={'Posts'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            to: '/dashboard/posts',
-            // activeStyle
-          }}>
-          <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
-          <ListItemText primary={'Posts'} />
-        </ListItem>
-      )}
-      {(role === 'admin' || role === 'root') && (
-        <Divider />
-      )}
-      {(role === 'admin' || role === 'root') && (
-        <ListItem button
-          key={'Mails'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            to: '/dashboard/mails',
-            // activeStyle
-          }}>
-          <ListItemIcon>{<Icon>email</Icon>}</ListItemIcon>
-          <ListItemText primary={'Mails'} />
-        </ListItem>
-      )}
-      {role === 'root' && (
-        <Divider />
-      )}
-      {role === 'root' && (
-        <ListItem button
-          key={'Users'}
-          component={Link}
-          onClick={() => setMobileOpen(false)}
-          {...{
-            disableTouchRipple: true,
-            to: '/dashboard/users',
-            // activeStyle
-          }}>
-          <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
-          <ListItemText primary={'Users'} />
-        </ListItem>
-      )}
-      <Divider />
-      <ListItem button
-        key={'Settings'}
-        component={Link}
-        onClick={() => setMobileOpen(false)}
-        {...{
-          disableTouchRipple: true,
-          to: '/dashboard/settings',
-          // activeStyle
-        }}>
-        <ListItemIcon>{<Icon>settings</Icon>}</ListItemIcon>
-        <ListItemText primary={'Settings'} />
-      </ListItem>
-      <Divider />
-    </List>
-  )
 
   return (!time) ? (<LinearProgress />) : (
     <div className={app.root}>
@@ -303,37 +145,73 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
         </div>
         <Hidden smUp>
           <Typography className={toolbar.title} variant="h5" component="h3">
-            <Link className={toolbar.titleLink} to={'/'}>circa</Link>
+            circa
           </Typography>
         </Hidden>
         <div className={toolbar.date}>
           {(() => active ? <DateDisplay time={time} /> : <CircularProgress size={24} />)()}
         </div>
       </Toolbar>
-      {showBreadcrumbs && <Toolbar className={toolbar.breadcrumbBar}>
+      <Toolbar className={toolbar.breadcrumbBar}>
         <Breadcrumbs className={toolbar.breadcrumbs} aria-label="Breadcrumb">
+          {isDashboard && (
+            <span className={toolbar.breadcrumbOff}>Dashboard</span>
+          )}
+          {isBoxes && (
+            <span className={toolbar.breadcrumbOff}>Boxes</span>
+          )}
+          {isPosts && (
+            <span className={toolbar.breadcrumbOff}>Posts</span>
+          )}
           {isBox && (
             <Link className={toolbar.breadcrumb} to="/dashboard/boxes">Boxes</Link>
+          )}
+          {(isBox && !isThing) && (
+            <span className={toolbar.breadcrumbOff}>Box</span>
           )}
           {isPost && (
             <Link className={toolbar.breadcrumb} to="/dashboard/posts">Posts</Link>
           )}
+          {isPost && (
+            <span className={toolbar.breadcrumbOff}>Post</span>
+          )}
+          {isUsers && (
+            <span className={toolbar.breadcrumbOff}>Users</span>
+          )}
+          {isUser && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/users">Users</Link>
+          )}
+          {isUser && (
+            <span className={toolbar.breadcrumbOff}>User</span>
+          )}
+          {isMails && (
+            <span className={toolbar.breadcrumbOff}>Mails</span>
+          )}
           {isMail && (
             <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
           )}
+          {isMail && (
+            <span className={toolbar.breadcrumbOff}>Mail</span>
+          )}
           {isThing && (
-            <Link className={toolbar.breadcrumb}
-              to={`/dashboard/box/${pathname[3]}`}>Box</Link>
+            <Link className={toolbar.breadcrumb} to={`/dashboard/box/${pathname[3]}`}>Box</Link>
+          )}
+          {isThing && (
+            <span className={toolbar.breadcrumbOff}>Thing</span>
+          )}
+          {isSettings && (
+            <span className={toolbar.breadcrumbOff}>Settings</span>
           )}
         </Breadcrumbs>
-      </Toolbar>}
+      </Toolbar>
       <nav className={toolbar.drawer} aria-label="Main menu">
         <Hidden smUp implementation="css">
           <SwipeableDrawer
             variant="temporary"
             anchor={'left'}
             open={mobileOpen}
-            onClose={() => setMobileOpen(!mobileOpen)}
+            onOpen={() => setMobileOpen(true)}
+            onClose={() => setMobileOpen(false)}
             classes={{
               paper: toolbar.drawerPaper,
             }}
@@ -341,78 +219,22 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
               keepMounted: true,
             }}
           >
-            {drawer}
+            <Menu location={location} setMobileOpen={setMobileOpen} />
           </SwipeableDrawer>
         </Hidden>
         <Hidden xsDown implementation="css">
-          <SwipeableDrawer
+          <Drawer
             classes={{
               paper: toolbar.drawerPaper,
             }}
             variant="permanent"
             open
           >
-            {drawer}
-          </SwipeableDrawer>
+            <Menu location={location} setMobileOpen={setMobileOpen} />
+          </Drawer>
         </Hidden>
       </nav>
-      <Switch>
-        <Route
-          exact
-          path="/dashboard"
-          render={() => <Paper className={app.route}>
-            <Locks />
-          </Paper>}
-        />
-        <Route exact path="/dashboard/boxes" render={() =>
-          <Boxes authorize={authorize} />
-        } />
-        <Route exact path="/dashboard/settings" render={() => <Paper className={app.route}>
-          <Settings dispatch={dispatch} />
-        </Paper>} />
-        {role === 'root' && (
-          <Route exact path="/dashboard/things" render={() =>
-            <AllThings authorize={authorize} />
-          } />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Route exact path="/dashboard/post/:id" render={({ match }) =>
-            <Post match={match} authorize={authorize} />
-          } />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Route exact path="/dashboard/posts" render={() =>
-            <Posts authorize={authorize} />
-          } />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Route exact path="/dashboard/mails" render={() =>
-            <Mails authorize={authorize} />
-          } />
-        )}
-        {role === 'root' && (
-          <Route exact path="/dashboard/users/:id" render={({ match }) =>
-            <User match={match} authorize={authorize} />
-          } />
-        )}
-        {role === 'root' && (
-          <Route exact path="/dashboard/users" render={() =>
-            <Users authorize={authorize} />
-          } />
-        )}
-        {(role === 'admin' || role === 'root') && (
-          <Route path="/dashboard/mail/:id" render={({ match }) =>
-            <Mail match={match} authorize={authorize} />
-          } />
-        )}
-        <Route path="/dashboard/box/:boxId/thing/:id" render={({ match }) =>
-          <Thing match={match} authorize={authorize} />
-        } />
-        <Route path="/dashboard/box/:id" render={({ match }) =>
-          <Box match={match} authorize={authorize} />
-        } />
-        <Route component={R404} />
-      </Switch>
+      <Router dispatch={dispatch} authorize={authorize} />
     </div>
   )
 })

@@ -11,20 +11,28 @@ import Switch from '@material-ui/core/Switch'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 700,
-    margin: '0 auto',
-    width: '100%',
-    flex: '1 1',
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: '10px 20px',
+    boxShadow: 'none',
+    borderRadius: 0
   },
   paper: {
-    margin: '10px 0'
+    margin: '10px auto',
+    padding: '1em',
+    maxWidth: 700,
+    flex: '1 1',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    width: '-webkit-fill-available',
   },
   logout: {
     margin: '10px 0',
     display: 'flex',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    width: 'inherit',
   },
   logoutButton: {
     background: '#e64236',
@@ -60,7 +68,7 @@ export default ({ dispatch }) => {
     setLights(checked)
   }
 
-  return (<div className={styles.root}>
+  return (<Paper className={styles.root}>
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
@@ -90,12 +98,13 @@ export default ({ dispatch }) => {
         label="Theme lights"
         labelPlacement="start"
       />
+      <Paper className={styles.logout} elevation={0}>
+        <Button className={styles.logoutButton}
+          variant="contained"
+          onClick={() => setOpen(true)}>
+          Logout
+        </Button>
+      </Paper>
     </Paper>
-    <Paper className={styles.logout} elevation={0}>
-      <Button className={styles.logoutButton}
-        variant="contained"
-        onClick={() => setOpen(true)}>
-        Logout
-    </Button>
-    </Paper></div>)
+  </Paper>)
 }

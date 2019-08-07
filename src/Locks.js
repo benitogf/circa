@@ -12,10 +12,12 @@ const rootStyles = makeStyles((theme) => ({
   admin: {
     backgroundColor: 'rgb(11, 181, 0)',
     maxWidth: 'unset',
+    borderRadius: 0,
   },
   user: {
     backgroundColor: 'rgb(36, 109, 171)',
-    maxWidth: 'unset'
+    maxWidth: 'unset',
+    borderRadius: 0,
   },
   text: {
     color: 'white'

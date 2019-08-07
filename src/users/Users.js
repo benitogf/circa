@@ -46,7 +46,7 @@ export default ({ authorize }) => {
         <List className={styles.list} component="nav">
           {users.map((user) => [
             <ListItem key={user.account + 'list'}
-              {...{ to: '/dashboard/users/' + user.account }}
+              {...{ to: '/dashboard/user/' + user.account }}
               component={Link}
               button>
               <ListItemText className={styles.text}

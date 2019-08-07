@@ -52,7 +52,7 @@ export const fetch = async (url, authorize) => {
     }).json()
   } catch (e) {
     console.error(e)
-    if (e && e.response && e.response.status === 401) {
+    if (e && e.response && (e.response.status === 401 || e.response.status === 403)) {
       try {
         await authorize(e)
         const refreshToken = window.localStorage.getItem('token')
@@ -264,7 +264,7 @@ export const authorize = async (dispatch, context) => {
     window.localStorage.setItem('account', profileRefresh.account)
     window.localStorage.setItem('role', profileRefresh.role)
   } catch (e) {
-    if (e && e.response && e.response.status === 401) {
+    if (e && e.response && (e.response.status === 403 || e.response.status === 401)) {
       try {
         // try to refresh the token
         const refreshResponse = await api.put('authorize',
