@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
+import AppBar from '@material-ui/core/AppBar'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -20,8 +21,7 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
+    background: theme.palette.primary.main
   },
   text: {
     overflowWrap: 'break-word',
@@ -38,10 +38,15 @@ export default ({ authorize }) => {
   const styles = rootStyles({ active, loaded, lights })
 
   return <Paper className={styles.root} elevation={0}>
-    <List className={styles.list} component="nav">
-      <ListItem className={styles.listHeader}>
-        Things
+    <AppBar position="sticky" color="default">
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.listHeader}>
+          Things
       </ListItem>
+      </List>
+    </AppBar>
+
+    <List className={styles.list} component="nav">
       {!things ? (<LinearProgress />) : things.length !== 0 ? things.map((thing) => [
         <ListItem key={thing.index + 'list'}>
           <ListItemText className={styles.text}

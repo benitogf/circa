@@ -9,22 +9,10 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import AppBar from '@material-ui/core/AppBar'
 import PostForm from './PostForm'
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
-
-const Header = ({ post, active, styles }) => (<List className={styles.list}
-  component="nav">
-  <ListItem className={styles.listHeader}>
-    {(() => active && post && post.data ? post.data.name : <CircularProgress size={24} />)()}
-  </ListItem>
-  {post && post.created && <ListItem className={styles.listDate}>
-    Created on: <DateDisplay time={post.created} />
-  </ListItem>}
-  {post && post.updated !== 0 && <ListItem className={styles.listDate}>
-    Updated on: <DateDisplay time={post.updated} />
-  </ListItem>}
-</List>)
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +26,7 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.background.divider
+    background: theme.palette.primary.main
   },
   listDate: {
     fontSize: '0.8em',
@@ -67,8 +54,23 @@ export default ({ match, authorize }) => {
     return (<Redirect to={"/dashboard/posts"} />)
   }
 
-  return <Paper className={styles.root} elevation={1}>
-    <Header active={active} post={post} styles={styles} />
+  return <Paper className={styles.root} elevation={0}>
+    <AppBar position="sticky" color="default">
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.listHeader}>
+          {(() => active && post && post.data ? post.data.name : <CircularProgress color="inherit" size={24} />)()}
+        </ListItem>
+      </List>
+    </AppBar>
+    <List className={styles.list}
+      component="nav">
+      {post && post.created && <ListItem className={styles.listDate}>
+        Created on: <DateDisplay time={post.created} />
+      </ListItem>}
+      {post && post.updated !== 0 && <ListItem className={styles.listDate}>
+        Updated on: <DateDisplay time={post.updated} />
+      </ListItem>}
+    </List>
     {!post ? <LinearProgress /> : <PostForm publish={publish} post={post} authorize={authorize} />}
   </Paper>
 }

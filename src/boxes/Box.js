@@ -42,8 +42,7 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
+    background: theme.palette.primary.main
   },
   listDates: {
     padding: '15px 0 0',
@@ -109,7 +108,7 @@ export default ({ match, authorize }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => tab === 0 ? box && box.data ? box.data.name : <CircularProgress size={24} /> : 'Thing details')()}
+          {(() => tab === 0 ? box && box.data ? box.data.name : <CircularProgress color="inherit" size={24} /> : 'Thing details')()}
         </ListItem>
       </List>
       {(!box || !active) && <LinearProgress />}

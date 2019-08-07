@@ -15,7 +15,7 @@ import Settings from '../Settings'
 import R404 from '../404'
 import AllThings from '../things/AllThings'
 
-export default ({ dispatch, authorize }) => {
+export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
   return <Switch>
     <Route
@@ -72,4 +72,4 @@ export default ({ dispatch, authorize }) => {
     } />
     <Route component={R404} />
   </Switch>
-}
+})

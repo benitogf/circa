@@ -12,20 +12,6 @@ import ThingForm from './ThingForm'
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
 
-const Header = ({ thing, active, styles }) => (<List className={styles.list}
-  component="nav">
-  <ListItem className={styles.listHeader}>
-    {(() => thing && thing.data ? thing.data.name : <CircularProgress size={24} className={styles.formProgress} />)()}
-  </ListItem>
-  {(!thing || !active) && <LinearProgress />}
-  {thing && thing.created && <ListItem className={styles.listDate}>
-    Created on: <DateDisplay time={thing.created} />
-  </ListItem>}
-  {thing && thing.updated !== 0 && <ListItem className={styles.listDate}>
-    Updated on: <DateDisplay time={thing.updated} />
-  </ListItem>}
-</List>)
-
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
@@ -36,8 +22,7 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
+    background: theme.palette.primary.main
   },
   listDate: {
     fontSize: '0.8em',
@@ -64,7 +49,19 @@ export default ({ match, authorize }) => {
   }
 
   return <Paper className={styles.root} elevation={0}>
-    <Header active={active} thing={thing} styles={styles} />
+    <List className={styles.list}
+      component="nav">
+      <ListItem className={styles.listHeader}>
+        {(() => thing && thing.data ? thing.data.name : <CircularProgress color="inherit" size={24} className={styles.formProgress} />)()}
+      </ListItem>
+      {(!thing || !active) && <LinearProgress />}
+      {thing && thing.created && <ListItem className={styles.listDate}>
+        Created on: <DateDisplay time={thing.created} />
+      </ListItem>}
+      {thing && thing.updated !== 0 && <ListItem className={styles.listDate}>
+        Updated on: <DateDisplay time={thing.updated} />
+      </ListItem>}
+    </List>
     {thing && <ThingForm boxId={match.params.boxId} publish={publish} thing={thing} authorize={authorize} />}
   </Paper>
 }

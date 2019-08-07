@@ -20,7 +20,7 @@ const TabContainer = ({ children, dir }) => (<Typography component="div" dir={di
   {children}
 </Typography>)
 
-const BoxesList = ({ active, boxes, styles }) =>
+const BoxesList = ({ boxes, styles }) =>
   <List className={styles.list}
     component="nav">
     {(boxes && boxes.length === 0) && <Typography className={styles.empty} component="h2">
@@ -58,8 +58,7 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
+    background: theme.palette.primary.main
   },
   empty: {
     padding: '1em'
@@ -122,12 +121,12 @@ export default ({ authorize }) => {
         className={styles.tabRoot}
       >
         <TabContainer dir={theme.direction}>
-          <BoxesList active={active} boxes={boxes} styles={styles} />
+          <BoxesList boxes={boxes} styles={styles} />
         </TabContainer>
         <TabContainer dir={theme.direction}>
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    ] : <BoxesList active={active} boxes={boxes} styles={styles} />)()}
+    ] : <BoxesList boxes={boxes} styles={styles} />)()}
   </Paper>
 }

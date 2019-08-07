@@ -55,17 +55,22 @@ const rootStyles = makeStyles((theme) => ({
     width: '-webkit-fill-available'
   },
   formSubmit: {
-    marginTop: 20,
+    marginTop: 10,
     marginLeft: 10
   },
   formDelete: {
-    marginTop: 20,
+    marginTop: 10,
     background: theme.palette.error.main
   },
   formButtonWrapper: {
-    position: 'relative',
     display: 'flex',
-    justifyContent: 'flex-end'
+    position: 'sticky',
+    justifyContent: 'flex-end',
+    bottom: 0,
+    paddingBottom: '0.6em',
+    background: (props) => props.lights ? '#d0d1d2b5' : '#2a231dbf',
+    paddingRight: '0.6em',
+    border: (props) => props.lights ? '1px #ccc solid' : '1px white solid',
   },
   formProgress: {
     position: 'absolute',

@@ -28,17 +28,17 @@ const PostsList = ({ active, posts, styles }) =>
       There are no posts yet.
     </Typography>}
     {(posts && posts.length !== 0) && posts.map((post) => [
-        <ListItem disableTouchRipple
-          {...{ to: '/dashboard/post/' + post.index }}
-          component={Link}
-          key={post.index + 'list'}
-          button>
-          <ListItemText className={styles.text}
-            primary={post.data.name} />
-        </ListItem>,
-        <Divider key={post.index + 'divider'} />
-      ]
-      )}
+      <ListItem disableTouchRipple
+        {...{ to: '/dashboard/post/' + post.index }}
+        component={Link}
+        key={post.index + 'list'}
+        button>
+        <ListItemText className={styles.text}
+          primary={post.data.name} />
+      </ListItem>,
+      <Divider key={post.index + 'divider'} />
+    ]
+    )}
   </List>
 
 const rootStyles = makeStyles((theme) => ({
@@ -71,7 +71,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : theme.palette.background.divider
+    background: theme.palette.primary.main
   },
   empty: {
     padding: '1em'

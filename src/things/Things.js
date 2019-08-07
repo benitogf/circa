@@ -14,11 +14,10 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
     position: 'sticky',
     top: 0,
     zIndex: 2,
-    background: props => props.active ? theme.palette.secondary.main : theme.palette.divider
+    background: (props) => props.lights ? '#dadada' : theme.palette.background.paper
   },
   text: {
     overflowWrap: 'break-word',

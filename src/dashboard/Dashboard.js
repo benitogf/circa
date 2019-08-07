@@ -24,7 +24,7 @@ const toolbarStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    background: (props) => props.lights ? '#d5e4f1' : '#383838',
+    background: (props) => props.lights ? '#f1f1f1' : '#383838',
     height: 65,
     minHeight: 65,
     paddingTop: 0,
@@ -68,10 +68,10 @@ const toolbarStyles = makeStyles((theme) => ({
     color: (props) => props.lights ? 'black' : 'white',
   },
   breadcrumbBar: {
-    background: (props) => props.lights ? '#77a8d2' : 'rgb(90, 90, 90)',
+    background: (props) => props.lights ? 'white' : 'rgb(90, 90, 90)',
   },
   breadcrumbs: {
-    background: (props) => props.lights ? '#cde2f5' : '#4c4c4c',
+    background: (props) => props.lights ? '#e6e6e6' : '#4c4c4c',
     padding: '5px 10px',
     borderRadius: 5
   },
