@@ -131,7 +131,9 @@ export default ({ match, authorize }) => {
       setFetched(true)
       try {
         const data = await fetch('user/' + match.params.id, authorize)
-        update(fields, [], { data })
+        setTimeout(() => {
+          update(fields, [], { data })
+        }, 400)
       } catch (e) {
         console.error(e)
         setEmpty(true)

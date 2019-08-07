@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link, Redirect, withRouter } from 'react-router-dom'
-import { useSubscribe } from './api'
+import { useSubscribe } from '../api'
 import moment from 'moment'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -63,15 +63,15 @@ const toolbarStyles = makeStyles((theme) => ({
   },
   date: {
     fontSize: '0.9em',
-    maxWidth: '10em',
+    maxWidth: '13em',
     textAlign: 'end',
     color: (props) => props.lights ? 'black' : 'white',
   },
   breadcrumbBar: {
-    background: (props) => props.lights ? '#a2c4e2' : '#424242',
+    background: (props) => props.lights ? '#77a8d2' : 'rgb(90, 90, 90)',
   },
   breadcrumbs: {
-    background: (props) => props.lights ? '#f5faff' : '#4c4c4c',
+    background: (props) => props.lights ? '#cde2f5' : '#4c4c4c',
     padding: '5px 10px',
     borderRadius: 5
   },
@@ -113,16 +113,20 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   const app = appStyles()
   const pathname = location.pathname.split('/')
   const isDashboard = pathname.length === 2
+  // first leve
   const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
-  const isBox = pathname.length > 3 && pathname[2] === 'box'
-  const isThing = pathname.length > 4 && pathname[4] === 'thing'
+  const isThings = pathname.length > 2 && pathname[2] === 'things'
   const isPosts = pathname.length > 2 && pathname[2] === 'posts'
-  const isPost = pathname.length > 3 && pathname[2] === 'post'
   const isUsers = pathname.length > 2 && pathname[2] === 'users'
-  const isUser = pathname.length > 3 && pathname[2] === 'user'
   const isMails = pathname.length > 2 && pathname[2] === 'mails'
-  const isMail = pathname.length > 3 && pathname[2] === 'mail'
   const isSettings = pathname.length > 2 && pathname[2] === 'settings'
+  // second level
+  const isBox = pathname.length > 3 && pathname[2] === 'box'
+  const isPost = pathname.length > 3 && pathname[2] === 'post'
+  const isUser = pathname.length > 3 && pathname[2] === 'user'
+  const isMail = pathname.length > 3 && pathname[2] === 'mail'
+  // third level
+  const isThing = pathname.length > 4 && pathname[4] === 'thing'
 
 
   if (status === 'unauthorized') {
@@ -160,8 +164,20 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           {isBoxes && (
             <span className={toolbar.breadcrumbOff}>Boxes</span>
           )}
+          {isThings && (
+            <span className={toolbar.breadcrumbOff}>Things</span>
+          )}
           {isPosts && (
             <span className={toolbar.breadcrumbOff}>Posts</span>
+          )}
+          {isUsers && (
+            <span className={toolbar.breadcrumbOff}>Users</span>
+          )}
+          {isMails && (
+            <span className={toolbar.breadcrumbOff}>Mails</span>
+          )}
+          {isSettings && (
+            <span className={toolbar.breadcrumbOff}>Settings</span>
           )}
           {isBox && (
             <Link className={toolbar.breadcrumb} to="/dashboard/boxes">Boxes</Link>
@@ -169,14 +185,17 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           {(isBox && !isThing) && (
             <span className={toolbar.breadcrumbOff}>Box</span>
           )}
+          {isThing && (
+            <Link className={toolbar.breadcrumb} to={`/dashboard/box/${pathname[3]}`}>Box</Link>
+          )}
+          {isThing && (
+            <span className={toolbar.breadcrumbOff}>Thing</span>
+          )}
           {isPost && (
             <Link className={toolbar.breadcrumb} to="/dashboard/posts">Posts</Link>
           )}
           {isPost && (
             <span className={toolbar.breadcrumbOff}>Post</span>
-          )}
-          {isUsers && (
-            <span className={toolbar.breadcrumbOff}>Users</span>
           )}
           {isUser && (
             <Link className={toolbar.breadcrumb} to="/dashboard/users">Users</Link>
@@ -184,23 +203,11 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           {isUser && (
             <span className={toolbar.breadcrumbOff}>User</span>
           )}
-          {isMails && (
-            <span className={toolbar.breadcrumbOff}>Mails</span>
-          )}
           {isMail && (
             <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
           )}
           {isMail && (
             <span className={toolbar.breadcrumbOff}>Mail</span>
-          )}
-          {isThing && (
-            <Link className={toolbar.breadcrumb} to={`/dashboard/box/${pathname[3]}`}>Box</Link>
-          )}
-          {isThing && (
-            <span className={toolbar.breadcrumbOff}>Thing</span>
-          )}
-          {isSettings && (
-            <span className={toolbar.breadcrumbOff}>Settings</span>
           )}
         </Breadcrumbs>
       </Toolbar>

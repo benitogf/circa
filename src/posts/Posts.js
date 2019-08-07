@@ -23,12 +23,11 @@ const TabContainer = ({ children, dir }) => (<Typography component="div" dir={di
 const PostsList = ({ active, posts, styles }) =>
   <List className={styles.list}
     component="nav">
-    <ListItem className={styles.listHeader}>
-      {(() => active ? 'Available posts' : 'offline')()}
-    </ListItem>
-    {!posts ? <LinearProgress /> : posts.length === 0 ? <Typography className={styles.empty} component="h2">
+    {(!posts || !active) && <LinearProgress />}
+    {(posts && posts.length === 0) && <Typography className={styles.empty} component="h2">
       There are no posts yet.
-      </Typography> : posts.map((post) => [
+    </Typography>}
+    {(posts && posts.length !== 0) && posts.map((post) => [
         <ListItem disableTouchRipple
           {...{ to: '/dashboard/post/' + post.index }}
           component={Link}
@@ -72,7 +71,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.background.divider
   },
   empty: {
     padding: '1em'
@@ -122,6 +121,12 @@ export default ({ authorize }) => {
           <Tab disableTouchRipple label="Posts" />
           <Tab disableTouchRipple label="New post" />
         </Tabs>
+        <List className={styles.list}
+          component="nav">
+          <ListItem className={styles.listHeader}>
+            {(() => tab === 0 ? 'Available posts' : 'Post details')()}
+          </ListItem>
+        </List>
       </AppBar>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -134,12 +139,6 @@ export default ({ authorize }) => {
           <PostsList active={active} posts={posts} styles={styles} />
         </TabContainer>
         <TabContainer dir={theme.direction}>
-          <List className={styles.list}
-            component="nav">
-            <ListItem className={styles.listHeader}>
-              {(() => active ? 'Post details' : 'offline')()}
-            </ListItem>
-          </List>
           <PostForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>

@@ -1,21 +1,21 @@
 
 import React, { memo } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Boxes from './boxes/Boxes'
-import Box from './boxes/Box'
-import Thing from './things/Thing'
-import Posts from './posts/Posts'
-import Post from './posts/Post'
-import Mails from './mails/Mails'
-import Mail from './mails/Mail'
-import Users from './users/Users'
-import User from './users/User'
-import Locks from './Locks'
-import Settings from './Settings'
-import R404 from './404'
-import AllThings from './things/AllThings'
+import Boxes from '../boxes/Boxes'
+import Box from '../boxes/Box'
+import Thing from '../things/Thing'
+import Posts from '../posts/Posts'
+import Post from '../posts/Post'
+import Mails from '../mails/Mails'
+import Mail from '../mails/Mail'
+import Users from '../users/Users'
+import User from '../users/User'
+import Locks from '../Locks'
+import Settings from '../Settings'
+import R404 from '../404'
+import AllThings from '../things/AllThings'
 
-export default memo(({ dispatch, authorize }) => {
+export default ({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
   return <Switch>
     <Route
@@ -72,4 +72,4 @@ export default memo(({ dispatch, authorize }) => {
     } />
     <Route component={R404} />
   </Switch>
-})
+}

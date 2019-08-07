@@ -26,12 +26,16 @@ const rootStyles = makeStyles((theme) => ({
 export default ({ authorize }) => {
   const styles = rootStyles()
   const [users, setUsers] = useState(null)
+  const [fetched, setFetched] = useState(null)
 
   const getUsers = async () => {
-    if (!users) {
+    if (!fetched) {
+      setFetched(true)
       try {
         const response = await fetch('users', authorize)
-        setUsers(response)
+        setTimeout(() => {
+          setUsers(response)
+        }, 400)
       } catch (e) {
         console.error(e)
       }

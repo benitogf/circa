@@ -5,6 +5,7 @@ import { useSubscribe, usePublish } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -15,7 +16,7 @@ const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, 
 const Header = ({ post, active, styles }) => (<List className={styles.list}
   component="nav">
   <ListItem className={styles.listHeader}>
-    {(() => active && post && post.data ? post.data.name : 'offline')()}
+    {(() => active && post && post.data ? post.data.name : <CircularProgress size={24} />)()}
   </ListItem>
   {post && post.created && <ListItem className={styles.listDate}>
     Created on: <DateDisplay time={post.created} />
@@ -38,7 +39,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.background.divider
   },
   listDate: {
     fontSize: '0.8em',

@@ -18,7 +18,8 @@ const rootStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
+    paddingBottom: 23,
   },
   warningContainer: {
     margin: '0 auto',

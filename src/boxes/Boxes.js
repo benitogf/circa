@@ -23,23 +23,21 @@ const TabContainer = ({ children, dir }) => (<Typography component="div" dir={di
 const BoxesList = ({ active, boxes, styles }) =>
   <List className={styles.list}
     component="nav">
-    <ListItem className={styles.listHeader}>
-      {(() => active ? 'Available boxes' : 'offline')()}
-    </ListItem>
-    {!boxes ? <LinearProgress /> : boxes.length === 0 ? <Typography className={styles.empty} component="h2">
+    {(boxes && boxes.length === 0) && <Typography className={styles.empty} component="h2">
       There are no boxes yet.
-      </Typography> : boxes.map((box) => [
-        <ListItem disableTouchRipple
-          {...{ to: '/dashboard/box/' + box.index }}
-          component={Link}
-          key={box.index + 'list'}
-          button>
-          <ListItemText className={styles.text}
-            primary={box.data.name} />
-        </ListItem>,
-        <Divider key={box.index + 'divider'} />
-      ]
-      )}
+    </Typography>}
+    {(boxes && boxes.length > 0) && boxes.map((box) => [
+      <ListItem disableTouchRipple
+        {...{ to: '/dashboard/box/' + box.index }}
+        component={Link}
+        key={box.index + 'list'}
+        button>
+        <ListItemText className={styles.text}
+          primary={box.data.name} />
+      </ListItem>,
+      <Divider key={box.index + 'divider'} />
+    ]
+    )}
   </List>
 
 const rootStyles = makeStyles((theme) => ({
@@ -61,7 +59,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
   },
   empty: {
     padding: '1em'
@@ -108,6 +106,13 @@ export default ({ authorize }) => {
           <Tab disableTouchRipple label="Boxes" />
           <Tab disableTouchRipple label="New box" />
         </Tabs>
+        <List className={styles.list}
+          component="nav">
+          <ListItem className={styles.listHeader}>
+            {(() => tab === 0 ? 'Available boxes' : 'Box details')()}
+          </ListItem>
+        </List>
+        {(!boxes || !active) && <LinearProgress />}
       </AppBar>,
       <SwipeableViews key="boxesTabs"
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -120,12 +125,6 @@ export default ({ authorize }) => {
           <BoxesList active={active} boxes={boxes} styles={styles} />
         </TabContainer>
         <TabContainer dir={theme.direction}>
-          <List className={styles.list}
-            component="nav">
-            <ListItem className={styles.listHeader}>
-              {(() => active ? 'Box details' : 'offline')()}
-            </ListItem>
-          </List>
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>

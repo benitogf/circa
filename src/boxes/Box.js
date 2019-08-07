@@ -6,6 +6,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -18,20 +19,6 @@ import Things from '../things/Things'
 import ThingForm from '../things/ThingForm'
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
-
-const Header = ({ box, active, styles }) => (<List className={styles.list}
-  component="nav">
-  <ListItem className={styles.listHeader}>
-    {(() => active && box && box.data ? box.data.name : 'offline')()}
-  </ListItem>
-  {box && box.created && <ListItem className={styles.listDate}>
-    Created on: <DateDisplay time={box.created} />
-  </ListItem>}
-  {box && box.updated !== 0 && <ListItem className={styles.listDate}>
-    Updated on: <DateDisplay time={box.updated} />
-  </ListItem>}
-</List>)
-
 
 const TabContainer = ({ children, dir }) => (<Typography component="div" dir={dir}>
   {children}
@@ -56,7 +43,11 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
+  },
+  listDates: {
+    padding: '15px 0 0',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listDate: {
     fontSize: '0.8em',
@@ -115,6 +106,13 @@ export default ({ match, authorize }) => {
         <Tab disableTouchRipple label="Box" />
         <Tab disableTouchRipple label="New thing" />
       </Tabs>
+      <List className={styles.list}
+        component="nav">
+        <ListItem className={styles.listHeader}>
+          {(() => tab === 0 ? box && box.data ? box.data.name : <CircularProgress size={24} /> : 'Thing details')()}
+        </ListItem>
+      </List>
+      {(!box || !active) && <LinearProgress />}
     </AppBar>
     <SwipeableViews
       axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -124,21 +122,21 @@ export default ({ match, authorize }) => {
       className={styles.tabRoot}
     >
       <TabContainer dir={theme.direction}>
-        <Header active={active} box={box} styles={styles} />
-        {!box && <LinearProgress />}
+        {box && <List className={styles.listDates}
+          component="nav">
+          {box.created && <ListItem className={styles.listDate}>
+            Created on: <DateDisplay time={box.created} />
+          </ListItem>}
+          {box.updated !== 0 && <ListItem className={styles.listDate}>
+            Updated on: <DateDisplay time={box.updated} />
+          </ListItem>}
+        </List>}
         {box && canEdit && <BoxForm publish={publish} box={box} authorize={authorize} />}
         {box && <Things match={match} authorize={authorize} />}
       </TabContainer>
       <TabContainer dir={theme.direction}>
         <div className={styles.formTab}>
-          <List className={styles.list}
-            component="nav">
-            <ListItem className={styles.listHeader}>
-              {(() => active ? 'Thing details' : 'offline')()}
-            </ListItem>
-          </List>
-          {!box ? <LinearProgress /> :
-            <ThingForm boxId={box.index} publish={publishThing} afterCreate={() => setTab(0)} authorize={authorize} />}
+          {box && <ThingForm boxId={box.index} publish={publishThing} afterCreate={() => setTab(0)} authorize={authorize} />}
         </div>
       </TabContainer>
     </SwipeableViews>

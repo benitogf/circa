@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { useSubscribe, usePublish } from '../api'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -14,8 +15,9 @@ const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, 
 const Header = ({ thing, active, styles }) => (<List className={styles.list}
   component="nav">
   <ListItem className={styles.listHeader}>
-    {(() => active ? 'Thing details' : 'offline')()}
+    {(() => thing && thing.data ? thing.data.name : <CircularProgress size={24} className={styles.formProgress} />)()}
   </ListItem>
+  {(!thing || !active) && <LinearProgress />}
   {thing && thing.created && <ListItem className={styles.listDate}>
     Created on: <DateDisplay time={thing.created} />
   </ListItem>}
@@ -35,7 +37,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? theme.palette.primary.main : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
   },
   listDate: {
     fontSize: '0.8em',
@@ -63,6 +65,6 @@ export default ({ match, authorize }) => {
 
   return <Paper className={styles.root} elevation={0}>
     <Header active={active} thing={thing} styles={styles} />
-    {!thing ? <LinearProgress /> : <ThingForm boxId={match.params.boxId} publish={publish} thing={thing} authorize={authorize} />}
+    {thing && <ThingForm boxId={match.params.boxId} publish={publish} thing={thing} authorize={authorize} />}
   </Paper>
 }

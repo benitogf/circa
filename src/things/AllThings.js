@@ -21,7 +21,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? props.lights ? '#dadada' : '#717171' : '#f1932c'
+    background: props => props.active ? theme.palette.primary.main : theme.palette.divider
   },
   text: {
     overflowWrap: 'break-word',
@@ -40,7 +40,7 @@ export default ({ authorize }) => {
   return <Paper className={styles.root} elevation={0}>
     <List className={styles.list} component="nav">
       <ListItem className={styles.listHeader}>
-        {active ? 'Things' : 'offline'}
+        Things
       </ListItem>
       {!things ? (<LinearProgress />) : things.length !== 0 ? things.map((thing) => [
         <ListItem key={thing.index + 'list'}>

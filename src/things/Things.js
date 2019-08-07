@@ -15,7 +15,10 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     transition: 'background-color 0.5s ease',
-    background: props => props.active ? props.lights ? '#dadada' : '#717171' : '#f1932c'
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
+    background: props => props.active ? theme.palette.secondary.main : theme.palette.divider
   },
   text: {
     overflowWrap: 'break-word',
@@ -32,9 +35,10 @@ export default ({ match, authorize }) => {
 
   return <List className={styles.list} component="nav">
     <ListItem className={styles.listHeader}>
-      {active ? 'Things' : 'offline'}
+      Things
     </ListItem>
-    {!things ? (<LinearProgress />) : things.length !== 0 ? things.map((thing) => [
+    {(!things || !active) && (<LinearProgress />)}
+    {(things && things.length !== 0) && things.map((thing) => [
       <ListItem disableTouchRipple
         {...{ to: '/dashboard/box/' + match.params.id + '/thing/' + thing.index }}
         component={Link}
@@ -44,6 +48,7 @@ export default ({ match, authorize }) => {
           primary={thing.data.name} />
       </ListItem>,
       <Divider key={thing.index + 'divider'} />
-    ]) : <ListItem>There are no things on this box yet</ListItem>}
+    ])}
+    {(things && things.length === 0) && <ListItem>There are no things on this box yet</ListItem>}
   </List>
 }
