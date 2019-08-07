@@ -50,16 +50,19 @@ const rootStyles = makeStyles((theme) => ({
   },
   form: {
     padding: '1em',
+    paddingBottom: 0,
     maxWidth: 960,
-    margin: '0 auto',
-    width: '-webkit-fill-available'
+    [theme.breakpoints.up('md')]: {
+      margin: '0 auto',
+      width: 'calc(100% - 35px)'
+    }
   },
   formSubmit: {
-    marginTop: 10,
-    marginLeft: 10
+    marginTop: 6,
+    marginLeft: 6,
   },
   formDelete: {
-    marginTop: 10,
+    marginTop: 6,
     background: theme.palette.error.main
   },
   formButtonWrapper: {
@@ -67,10 +70,11 @@ const rootStyles = makeStyles((theme) => ({
     position: 'sticky',
     justifyContent: 'flex-end',
     bottom: 0,
-    paddingBottom: '0.6em',
-    background: (props) => props.lights ? '#d0d1d2b5' : '#2a231dbf',
-    paddingRight: '0.6em',
-    border: (props) => props.lights ? '1px #ccc solid' : '1px white solid',
+    paddingBottom: 6,
+    background: '#d0d1d2',
+    paddingRight: 6,
+    border: '1px solid',
+    borderColor: '#ccc'
   },
   formProgress: {
     position: 'absolute',

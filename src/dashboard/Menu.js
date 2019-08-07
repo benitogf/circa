@@ -38,6 +38,8 @@ export default memo(({ location, setMobileOpen }) => {
   const isBox = pathname.length > 3 && pathname[2] === 'box'
   const isThing = pathname.length > 4 && pathname[4] === 'thing'
   const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
+  const isPost = pathname.length > 3 && pathname[2] === 'post'
+  const isPosts = pathname.length > 2 && pathname[2] === 'posts'
   const activeLink = lights ? '#efefef' : 'rgb(88, 88, 88)'
   // https://reacttraining.com/react-router/web/api/NavLink
   // this trigers a re-render on each time tick
@@ -108,7 +110,8 @@ export default memo(({ location, setMobileOpen }) => {
         {...{
           disableTouchRipple: true,
           to: '/dashboard/posts',
-          activeStyle
+          activeStyle,
+          isActive: () => isPosts || isPost
         }}>
         <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
         <ListItemText primary={'Posts'} />

@@ -16,20 +16,23 @@ const rootStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     padding: '10px 20px',
     boxShadow: 'none',
-    borderRadius: 0
+    borderRadius: 0,
+    background: props => props.lights ? '#f1f1f1' : '#333333'
   },
   paper: {
-    margin: '10px auto',
     padding: '1em',
     maxWidth: 700,
     flex: '1 1',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
-    width: '-webkit-fill-available',
+    [theme.breakpoints.up('md')]: {
+      margin: '10px auto',
+      width: '100%',
+    }
   },
   logout: {
-    margin: '10px 0',
+    margin: '10px 0 0',
     display: 'flex',
     justifyContent: 'flex-end',
     width: 'inherit',
@@ -60,7 +63,7 @@ export default ({ dispatch }) => {
   const [lights, setLights] = useState(window.localStorage.getItem('lights') === 'on')
   const account = window.localStorage.getItem('account')
 
-  const styles = rootStyles()
+  const styles = rootStyles({ lights })
 
   function handleChange(checked) {
     window.localStorage.setItem('lights', checked ? 'on' : 'off')

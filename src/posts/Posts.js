@@ -70,7 +70,6 @@ const rootStyles = makeStyles((theme) => ({
     right: 20
   },
   listHeader: {
-    transition: 'background-color 0.5s ease',
     background: theme.palette.primary.main
   },
   empty: {

@@ -837,6 +837,9 @@
   font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   padding: 8px;
   background-color: #d0d1d2;
+  position: sticky;
+  top: 35px;
+  z-index: 2;
 }
 .ql-toolbar.ql-snow .ql-formats {
   margin-right: 15px;
