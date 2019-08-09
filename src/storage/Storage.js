@@ -1,5 +1,6 @@
-import React from 'react'
-import { useSubscribe } from '../api'
+import React, { useState } from 'react'
+import { fetch } from '../api'
+import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
@@ -31,11 +32,26 @@ const rootStyles = makeStyles((theme) => ({
 
 export default ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
-  const [things, socket] = useSubscribe('things/*/*/*', authorize)
-  const active = socket && socket.readyState === WebSocket.OPEN
-  const loaded = things !== null
+  const styles = rootStyles({ lights })
+  const [keys, setKeys] = useState(null)
+  const [fetched, setFetched] = useState(null)
 
-  const styles = rootStyles({ active, loaded, lights })
+  const getKeys = async () => {
+    if (!fetched) {
+      setFetched(true)
+      try {
+        const response = await fetch('', authorize)
+        setTimeout(() => {
+          setKeys(response.keys)
+        }, 400)
+      } catch (e) {
+        console.error(e)
+      }
+    }
+  }
+
+  getKeys()
+
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
@@ -47,14 +63,17 @@ export default ({ authorize }) => {
     </AppBar>
 
     <List className={styles.list} component="nav">
-      {!things ? (<LinearProgress />) : things.length !== 0 ? things.map((thing) => [
-        <ListItem key={thing.index + 'list'}>
+      {!keys ? (<LinearProgress />) : keys.length !== 0 ? keys.map((key) => [
+        <ListItem {...{ to: '/dashboard/storage/' + key.replace(/\//gi, ':') }}
+          component={Link}
+          button
+          key={key + 'list'}>
           <ListItemText className={styles.text}
-            primary={thing.data.name} />
+            primary={key} />
         </ListItem>,
-        <Divider key={thing.index + 'divider'} />
+        <Divider key={key + 'divider'} />
       ]
-      ) : <ListItem>There are no things on any box yet</ListItem>}
+      ) : <ListItem>There are no keys on any box yet</ListItem>}
     </List>
   </Paper>
 }

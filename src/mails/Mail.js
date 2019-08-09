@@ -20,8 +20,8 @@ export default ({ match, authorize }) => {
   const styles = rootStyles()
 
   return (!mail) ? (<LinearProgress />) : (
-    <Paper className={styles.root} elevation={1}>
-      <Typography className={styles.text} component="h2">
+    <Paper className={styles.root} elevation={0}>
+      <Typography className={styles.text} component="div">
         {JSON.stringify(mail)}
       </Typography>
     </Paper>

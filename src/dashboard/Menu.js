@@ -82,23 +82,6 @@ export default memo(({ location, setMobileOpen }) => {
       <ListItemIcon>{<Icon>developer_board</Icon>}</ListItemIcon>
       <ListItemText primary={'Boxes demo'} />
     </ListItem>
-    {role === 'root' && (
-      <Divider />
-    )}
-    {role === 'root' && (
-      <ListItem button
-        key={'Things'}
-        component={NavLinkRef}
-        onClick={() => setMobileOpen(false)}
-        {...{
-          disableTouchRipple: true,
-          to: '/dashboard/things',
-          activeStyle
-        }}>
-        <ListItemIcon>{<Icon>inbox</Icon>}</ListItemIcon>
-        <ListItemText primary={'Things'} />
-      </ListItem>
-    )}
     {(role === 'admin' || role === 'root') && (
       <Divider />
     )}
@@ -149,6 +132,23 @@ export default memo(({ location, setMobileOpen }) => {
         }}>
         <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
         <ListItemText primary={'Users'} />
+      </ListItem>
+    )}
+    {role === 'root' && (
+      <Divider />
+    )}
+    {role === 'root' && (
+      <ListItem button
+        key={'Storage'}
+        component={NavLinkRef}
+        onClick={() => setMobileOpen(false)}
+        {...{
+          disableTouchRipple: true,
+          to: '/dashboard/storage',
+          activeStyle
+        }}>
+        <ListItemIcon>{<Icon>storage</Icon>}</ListItemIcon>
+        <ListItemText primary={'Storage'} />
       </ListItem>
     )}
     <Divider />

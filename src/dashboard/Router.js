@@ -12,8 +12,9 @@ import Users from '../users/Users'
 import User from '../users/User'
 import Locks from '../Locks'
 import Settings from '../Settings'
+import Storage from '../storage/Storage'
+import Key from '../storage/Key'
 import R404 from '../404'
-import AllThings from '../things/AllThings'
 
 export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
@@ -29,11 +30,6 @@ export default memo(({ dispatch, authorize }) => {
     <Route exact path="/dashboard/settings" render={() =>
       <Settings dispatch={dispatch} />
     } />
-    {role === 'root' && (
-      <Route exact path="/dashboard/things" render={() =>
-        <AllThings authorize={authorize} />
-      } />
-    )}
     {(role === 'admin' || role === 'root') && (
       <Route exact path="/dashboard/post/:id" render={({ match }) =>
         <Post match={match} authorize={authorize} />
@@ -59,6 +55,11 @@ export default memo(({ dispatch, authorize }) => {
         <Users authorize={authorize} />
       } />
     )}
+    {role === 'root' && (
+      <Route exact path="/dashboard/storage" render={() =>
+        <Storage authorize={authorize} />
+      } />
+    )}
     {(role === 'admin' || role === 'root') && (
       <Route path="/dashboard/mail/:id" render={({ match }) =>
         <Mail match={match} authorize={authorize} />
@@ -70,6 +71,11 @@ export default memo(({ dispatch, authorize }) => {
     <Route path="/dashboard/box/:id" render={({ match }) =>
       <Box match={match} authorize={authorize} />
     } />
+    {role === 'root' && (
+      <Route exact path="/dashboard/storage/:id" render={({ match }) =>
+        <Key match={match} authorize={authorize} />
+      } />
+    )}
     <Route component={R404} />
   </Switch>
 })

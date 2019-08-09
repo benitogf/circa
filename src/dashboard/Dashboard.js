@@ -113,18 +113,19 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   const app = appStyles()
   const pathname = location.pathname.split('/')
   const isDashboard = pathname.length === 2
-  // first leve
-  const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
-  const isThings = pathname.length > 2 && pathname[2] === 'things'
-  const isPosts = pathname.length > 2 && pathname[2] === 'posts'
-  const isUsers = pathname.length > 2 && pathname[2] === 'users'
-  const isMails = pathname.length > 2 && pathname[2] === 'mails'
-  const isSettings = pathname.length > 2 && pathname[2] === 'settings'
+  // first level
+  const isBoxes = pathname.length === 3 && pathname[2] === 'boxes'
+  const isPosts = pathname.length === 3 && pathname[2] === 'posts'
+  const isMails = pathname.length === 3 && pathname[2] === 'mails'
+  const isUsers = pathname.length === 3 && pathname[2] === 'users'
+  const isStorage = pathname.length === 3 && pathname[2] === 'storage'
+  const isSettings = pathname.length === 3 && pathname[2] === 'settings'
   // second level
   const isBox = pathname.length > 3 && pathname[2] === 'box'
   const isPost = pathname.length > 3 && pathname[2] === 'post'
-  const isUser = pathname.length > 3 && pathname[2] === 'user'
   const isMail = pathname.length > 3 && pathname[2] === 'mail'
+  const isUser = pathname.length > 3 && pathname[2] === 'user'
+  const isKey = pathname.length === 4 && pathname[2] === 'storage'
   // third level
   const isThing = pathname.length > 4 && pathname[4] === 'thing'
 
@@ -164,17 +165,17 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           {isBoxes && (
             <span className={toolbar.breadcrumbOff}>Boxes</span>
           )}
-          {isThings && (
-            <span className={toolbar.breadcrumbOff}>Things</span>
-          )}
           {isPosts && (
             <span className={toolbar.breadcrumbOff}>Posts</span>
+          )}
+          {isMails && (
+            <span className={toolbar.breadcrumbOff}>Mails</span>
           )}
           {isUsers && (
             <span className={toolbar.breadcrumbOff}>Users</span>
           )}
-          {isMails && (
-            <span className={toolbar.breadcrumbOff}>Mails</span>
+          {isStorage && (
+            <span className={toolbar.breadcrumbOff}>Storage</span>
           )}
           {isSettings && (
             <span className={toolbar.breadcrumbOff}>Settings</span>
@@ -197,17 +198,23 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
           {isPost && (
             <span className={toolbar.breadcrumbOff}>Post</span>
           )}
+          {isMail && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
+          )}
+          {isMail && (
+            <span className={toolbar.breadcrumbOff}>Mail</span>
+          )}
           {isUser && (
             <Link className={toolbar.breadcrumb} to="/dashboard/users">Users</Link>
           )}
           {isUser && (
             <span className={toolbar.breadcrumbOff}>User</span>
           )}
-          {isMail && (
-            <Link className={toolbar.breadcrumb} to="/dashboard/mails">Mails</Link>
+          {isKey && (
+            <Link className={toolbar.breadcrumb} to="/dashboard/storage">Storage</Link>
           )}
-          {isMail && (
-            <span className={toolbar.breadcrumbOff}>Mail</span>
+          {isKey && (
+            <span className={toolbar.breadcrumbOff}>Key</span>
           )}
         </Breadcrumbs>
       </Toolbar>
