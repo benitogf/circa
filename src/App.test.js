@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Locks from './Locks';
+import Locks from './dashboard/Locks';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
