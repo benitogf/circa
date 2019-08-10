@@ -12,6 +12,7 @@ PWA, TWA, JWT sample application
 
 download from https://github.com/benitogf/circa/releases
 
-### server repo
+### server
 
-https://github.com/benitogf/tie
+- https://github.com/benitogf/tie
+- https://github.com/tus/tusd
