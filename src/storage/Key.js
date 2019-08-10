@@ -7,6 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -31,6 +32,9 @@ const rootStyles = makeStyles((theme) => ({
     paddingRight: 6,
     border: '1px solid',
     borderColor: '#ccc'
+  },
+  listItem: {
+    display: 'grid',
   },
   formDelete: {
     marginTop: 6,
@@ -104,9 +108,10 @@ export default ({ match, authorize }) => {
           Updated on: <DateDisplay time={key.updated} />
         </ListItem>}
       </List>
-      <Typography className={styles.text} component="div">
-        {JSON.stringify(key.data)}
-      </Typography>
+      <ListItem className={styles.listItem}>
+        <ListItemText className={styles.text}
+          primary={<code>{JSON.stringify(key.data)}</code>} />
+      </ListItem>
       <div className={styles.formButtonWrapper}>
         <Button className={styles.formDelete}
           variant="contained"

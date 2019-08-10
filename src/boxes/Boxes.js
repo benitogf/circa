@@ -27,7 +27,8 @@ const BoxesList = ({ boxes, styles }) =>
       There are no boxes yet.
     </Typography>}
     {(boxes && boxes.length > 0) && boxes.map((box) => [
-      <ListItem disableTouchRipple
+      <ListItem className={styles.listItem}
+        disableTouchRipple
         {...{ to: '/dashboard/box/' + box.index }}
         component={Link}
         key={box.index + 'list'}
@@ -59,6 +60,9 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     background: theme.palette.primary.main
+  },
+  listItem: {
+    display: 'grid',
   },
   empty: {
     padding: '1em'

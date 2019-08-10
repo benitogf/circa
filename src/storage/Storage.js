@@ -24,6 +24,9 @@ const rootStyles = makeStyles((theme) => ({
   listHeader: {
     background: theme.palette.primary.main
   },
+  listItem: {
+    display: 'grid',
+  },
   text: {
     overflowWrap: 'break-word',
     padding: '1em'
@@ -64,7 +67,8 @@ export default ({ authorize }) => {
 
     <List className={styles.list} component="nav">
       {!keys ? (<LinearProgress />) : keys.length !== 0 ? keys.map((key) => [
-        <ListItem {...{ to: '/dashboard/storage/' + key.replace(/\//gi, ':') }}
+        <ListItem className={styles.listItem}
+          {...{ to: '/dashboard/storage/' + key.replace(/\//gi, ':') }}
           component={Link}
           button
           key={key + 'list'}>

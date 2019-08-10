@@ -13,6 +13,9 @@ const rootStyles = makeStyles((theme) => ({
     padding: 0,
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
+  listItem: {
+    display: 'grid',
+  },
   listHeader: {
     position: 'sticky',
     top: 0,
@@ -38,7 +41,8 @@ export default ({ match, authorize }) => {
     </ListItem>
     {(!things || !active) && (<LinearProgress />)}
     {(things && things.length !== 0) && things.map((thing) => [
-      <ListItem disableTouchRipple
+      <ListItem className={styles.listItem}
+        disableTouchRipple
         {...{ to: '/dashboard/box/' + match.params.id + '/thing/' + thing.index }}
         component={Link}
         key={thing.index + 'list'}

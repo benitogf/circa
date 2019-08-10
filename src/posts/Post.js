@@ -9,6 +9,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import AppBar from '@material-ui/core/AppBar'
 import PostForm from './PostForm'
 
@@ -26,7 +27,11 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    background: theme.palette.primary.main
+    background: theme.palette.primary.main,
+    display: 'grid',
+  },
+  listHeaderText: {
+    overflowWrap: 'break-word'
   },
   listDate: {
     fontSize: '0.8em',
@@ -58,7 +63,7 @@ export default ({ match, authorize }) => {
     <AppBar position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => active && post && post.data ? post.data.name : <CircularProgress color="inherit" size={24} />)()}
+          {(() => active && post && post.data ? <ListItemText className={styles.listHeaderText} primary={post.data.name} /> : <CircularProgress color="inherit" size={24} />)()}
         </ListItem>
       </List>
     </AppBar>

@@ -28,7 +28,8 @@ const PostsList = ({ active, posts, styles }) =>
       There are no posts yet.
     </Typography>}
     {(posts && posts.length !== 0) && posts.map((post) => [
-      <ListItem disableTouchRipple
+      <ListItem className={styles.listItem}
+        disableTouchRipple
         {...{ to: '/dashboard/post/' + post.index }}
         component={Link}
         key={post.index + 'list'}
@@ -64,10 +65,8 @@ const rootStyles = makeStyles((theme) => ({
     padding: 0,
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
-  listLoader: {
-    position: 'absolute',
-    top: '15px',
-    right: 20
+  listItem: {
+    display: 'grid',
   },
   listHeader: {
     background: theme.palette.primary.main

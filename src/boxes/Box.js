@@ -10,6 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
@@ -42,7 +43,11 @@ const rootStyles = makeStyles((theme) => ({
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
-    background: theme.palette.primary.main
+    background: theme.palette.primary.main,
+    display: 'grid',
+  },
+  listHeaderText: {
+    overflowWrap: 'break-word'
   },
   listDates: {
     padding: '15px 0 0',
@@ -108,7 +113,7 @@ export default ({ match, authorize }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => tab === 0 ? box && box.data ? box.data.name : <CircularProgress color="inherit" size={24} /> : 'Thing details')()}
+          {(() => tab === 0 ? box && box.data ? <ListItemText className={styles.listHeaderText} primary={box.data.name} /> : <CircularProgress color="inherit" size={24} /> : 'Thing details')()}
         </ListItem>
       </List>
       {(!box || !active) && <LinearProgress />}

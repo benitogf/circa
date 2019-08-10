@@ -21,7 +21,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: '1em',
-    maxWidth: 700,
+    maxWidth: 676,
     flex: '1 1',
     display: 'flex',
     flexDirection: 'column',

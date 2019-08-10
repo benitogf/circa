@@ -12,7 +12,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import lightBlue from '@material-ui/core/colors/lightBlue'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'lights':
       return {
@@ -28,6 +28,14 @@ function reducer(state, action) {
       throw new Error()
   }
 }
+
+// const visibilityChange = () => {
+//   if (document.hidden) {
+//     document.dispatchEvent(new Event('freeze'))
+//   } else {
+//     document.dispatchEvent(new Event('resume'))
+//   }
+// }
 
 export default () => {
   const account = window.localStorage.getItem('account')
@@ -56,6 +64,10 @@ export default () => {
       authorize()
     }
   }
+
+  // if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
+  //   document.addEventListener('visibilitychange', visibilityChange)
+  // }
 
   const theme = createMuiTheme({
     palette: {
