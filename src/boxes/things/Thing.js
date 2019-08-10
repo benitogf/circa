@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 import { Redirect } from 'react-router-dom'
-import { useSubscribe, usePublish } from '../api'
+import { useSubscribe, usePublish } from '../../api'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'

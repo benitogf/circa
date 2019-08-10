@@ -20,7 +20,7 @@ const rootStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: '1 1',
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
+    background: (props) => props.afterCreate ? props.lights ? '#fffffff0' : '#1f1f1fd6' : ''
   },
   warningContainer: {
     margin: '0 auto',
@@ -104,7 +104,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
   const [loading, setLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [updated, setUpdated] = useState(-1)
-  const styles = rootStyles({ lights })
+  const styles = rootStyles({ lights, afterCreate })
 
   const fields = {
     name: {

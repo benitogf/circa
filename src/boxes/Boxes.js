@@ -61,6 +61,9 @@ const rootStyles = makeStyles((theme) => ({
   listHeader: {
     background: theme.palette.primary.main
   },
+  listHeaderText: {
+    overflowWrap: 'break-word'
+  },
   listItem: {
     display: 'grid',
   },
@@ -112,7 +115,9 @@ export default ({ authorize }) => {
         <List className={styles.list}
           component="nav">
           <ListItem className={styles.listHeader}>
-            {(() => tab === 0 ? 'Available boxes' : 'Box details')()}
+            {(() => tab === 0 ?
+              <ListItemText className={styles.listHeaderText} primary={'Available boxes'} /> :
+              <ListItemText className={styles.listHeaderText} primary={'Box details'} />)()}
           </ListItem>
         </List>
         {(!boxes || !active) && <LinearProgress />}

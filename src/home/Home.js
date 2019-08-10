@@ -17,7 +17,8 @@ const containerStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flex: '1 1',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    width: 'inherit',
   },
 }))
 

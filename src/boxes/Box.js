@@ -16,8 +16,8 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import BoxForm from './BoxForm'
-import Things from '../things/Things'
-import ThingForm from '../things/ThingForm'
+import Things from './things/Things'
+import ThingForm from './things/ThingForm'
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
 
@@ -113,7 +113,10 @@ export default ({ match, authorize }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => tab === 0 ? box && box.data ? <ListItemText className={styles.listHeaderText} primary={box.data.name} /> : <CircularProgress color="inherit" size={24} /> : 'Thing details')()}
+          {(() => tab === 0 ? box && box.data ?
+            <ListItemText className={styles.listHeaderText} primary={box.data.name} /> :
+            <CircularProgress color="inherit" size={24} /> :
+            <ListItemText className={styles.listHeaderText} primary={'Thing details'} />)()}
         </ListItem>
       </List>
       {(!box || !active) && <LinearProgress />}

@@ -16,7 +16,9 @@ import Tab from '@material-ui/core/Tab'
 import Divider from '@material-ui/core/Divider'
 import PostForm from './PostForm'
 
-const TabContainer = ({ children, dir }) => (<Typography component="div" dir={dir}>
+const TabContainer = ({ children, dir, className }) => (<Typography component="div"
+  className={className}
+  dir={dir}>
   {children}
 </Typography>)
 
@@ -61,6 +63,11 @@ const rootStyles = makeStyles((theme) => ({
     display: 'flex',
     flex: '1 1'
   },
+  tabContainerForm: {
+    display: 'flex',
+    height: '100%',
+  },
+  tabContainerList: {},
   list: {
     padding: 0,
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
@@ -70,6 +77,9 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     background: theme.palette.primary.main
+  },
+  listHeaderText: {
+    overflowWrap: 'break-word'
   },
   empty: {
     padding: '1em'
@@ -122,7 +132,9 @@ export default ({ authorize }) => {
         <List className={styles.list}
           component="nav">
           <ListItem className={styles.listHeader}>
-            {(() => tab === 0 ? 'Available posts' : 'Post details')()}
+            {(() => tab === 0 ?
+              <ListItemText className={styles.listHeaderText} primary={'Available posts'} /> :
+              <ListItemText className={styles.listHeaderText} primary={'Post details'} />)()}
           </ListItem>
         </List>
       </AppBar>
@@ -133,10 +145,10 @@ export default ({ authorize }) => {
         containerStyle={tabsContainerStyle}
         className={styles.tabRoot}
       >
-        <TabContainer dir={theme.direction}>
+        <TabContainer className={styles.tabContainerList} dir={theme.direction}>
           <PostsList active={active} posts={posts} styles={styles} />
         </TabContainer>
-        <TabContainer dir={theme.direction}>
+        <TabContainer className={styles.tabContainerForm} dir={theme.direction}>
           <PostForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>

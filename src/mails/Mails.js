@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSubscribe } from '../api'
+import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -8,14 +9,21 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
-import { Link } from 'react-router-dom'
+import AppBar from '@material-ui/core/AppBar'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
-    borderRadius: 0
+    borderRadius: 0,
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   list: {
     padding: 0,
+  },
+  listHeader: {
+    background: theme.palette.primary.main
+  },
+  listHeaderText: {
+    overflowWrap: 'break-word'
   },
   text: {
     overflowWrap: 'break-word',
@@ -28,9 +36,16 @@ export default ({ authorize }) => {
 
   const styles = rootStyles()
 
-  return (!mails) ? (<LinearProgress />) : (
+  return (
     <Paper className={styles.root} elevation={0}>
-      {(() => mails.length !== 0 ? (
+      <AppBar position="sticky" color="default">
+        <List className={styles.list} component="nav">
+          <ListItem className={styles.listHeader}>
+            <ListItemText className={styles.listHeaderText} primary={'Mails'} />
+          </ListItem>
+        </List>
+      </AppBar>
+      {(!mails) ? (<LinearProgress />) : (() => mails.length !== 0 ? (
         <List className={styles.list} component="nav">
           {mails.map((mail) => [
             <ListItem

@@ -24,6 +24,9 @@ const rootStyles = makeStyles((theme) => ({
   listHeader: {
     background: theme.palette.primary.main
   },
+  listHeaderText: {
+    overflowWrap: 'break-word'
+  },
   listItem: {
     display: 'grid',
   },
@@ -60,8 +63,8 @@ export default ({ authorize }) => {
     <AppBar position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.listHeader}>
-          Things
-      </ListItem>
+          <ListItemText className={styles.listHeaderText} primary={'Things'} />
+        </ListItem>
       </List>
     </AppBar>
 

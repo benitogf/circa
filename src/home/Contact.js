@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { publish } from './api'
+import { publish } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import AppBar from '@material-ui/core/AppBar'

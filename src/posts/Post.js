@@ -18,13 +18,12 @@ const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, 
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    background: 'transparent',
     overflow: 'auto',
-    flex: 1
+    flex: 1,
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   list: {
     padding: 0,
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   listHeader: {
     background: theme.palette.primary.main,
