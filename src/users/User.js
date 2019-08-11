@@ -91,7 +91,6 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 export default ({ match, authorize }) => {
-  const styles = rootStyles()
   const [fetched, setFetched] = useState(null)
   const [empty, setEmpty] = useState(false)
   const publish = usePublish('user/' + match.params.id, authorize)
@@ -105,7 +104,8 @@ export default ({ match, authorize }) => {
   const [confirm, setConfirm] = useState(false)
   const [fail, setFail] = useState('')
   const [loading, setLoading] = useState(false)
-
+  const lights = window.localStorage.getItem('lights') === 'on'
+  const styles = rootStyles({ lights })
   const fields = {
     account: {
       error: () => false,

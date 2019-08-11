@@ -33,8 +33,8 @@ const rootStyles = makeStyles((theme) => ({
 
 export default ({ authorize }) => {
   const [mails] = useSubscribe('mails/*', authorize)
-
-  const styles = rootStyles()
+  const lights = window.localStorage.getItem('lights') === 'on'
+  const styles = rootStyles({ lights })
 
   return (
     <Paper className={styles.root} elevation={0}>

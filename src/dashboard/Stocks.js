@@ -19,7 +19,6 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
-import { style } from '@material-ui/system';
 
 
 function desc(a, b, orderBy) {
@@ -66,14 +65,19 @@ const rootStyles = makeStyles((theme) => ({
     borderRadius: 5
   },
   menu: {
+    top: '82px !important',
     height: 300,
-    top: '75px !important',
+    left: '-10px !important'
   },
   tableHead: {
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
   sectionHeader: {
-    top: 72
+    top: 55
+  },
+  selectInput: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   lineChart: {
     margin: '3em auto',
@@ -135,6 +139,7 @@ export default ({ authorize }) => {
           <ListItemText className={styles.listHeaderText} primary={country + ' stock indices'} />
           {stocks && <Select className={styles.select}
             MenuProps={{ className: styles.menu }}
+            inputProps={{ className: styles.selectInput }}
             value={country}
             onChange={(e) => {
               setCountry(e.target.value)
@@ -152,7 +157,7 @@ export default ({ authorize }) => {
       <TableHead className={styles.tableHead}>
         <TableRow>
           {Object.keys(stocksMap[0]).map((v, i) => v !== 'priceChange1Day' || (!mobile && !tablet) ?
-            <TableCell align={i > 0 ? 'right' : ''}>
+            <TableCell key={v} align={i > 0 ? 'right' : 'left'}>
               <TableSortLabel active={orderBy === v}
                 direction={order}
                 onClick={createSortHandler(v)}
@@ -165,9 +170,9 @@ export default ({ authorize }) => {
           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
           .map((row, index) => <TableRow key={index}>
             {Object.keys(stocksMap[0]).map((v, i) => v !== 'priceChange1Day' || (!mobile && !tablet) ?
-              <TableCell component={i === 0 ? 'th' : ''}
+              <TableCell key={v} component={i === 0 ? 'th' : ''}
                 scope={i === 0 ? 'row' : ''}
-                align={i > 0 ? 'right' : ''}>{row[v]}</TableCell> : null)}
+                align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell> : null)}
           </TableRow>)}
       </TableBody>
     </Table>}

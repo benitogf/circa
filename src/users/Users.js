@@ -13,10 +13,11 @@ import AppBar from '@material-ui/core/AppBar'
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
+    background: 'transparent',
   },
   list: {
     padding: 0,
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
   },
   listHeader: {
     background: theme.palette.primary.main,
@@ -31,9 +32,10 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 export default ({ authorize }) => {
-  const styles = rootStyles()
   const [users, setUsers] = useState(null)
   const [fetched, setFetched] = useState(null)
+  const lights = window.localStorage.getItem('lights') === 'on'
+  const styles = rootStyles({ lights })
 
   const getUsers = async () => {
     if (!fetched) {
