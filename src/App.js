@@ -50,7 +50,7 @@ export default () => {
     status
   } = state
 
-  window.onstorage = () => {
+  window.onstorage = async () => {
     const newLights = window.localStorage.getItem('lights') === 'on'
     const newAccount = window.localStorage.getItem('account')
     const newRole = window.localStorage.getItem('role')
@@ -61,7 +61,11 @@ export default () => {
       })
     }
     if (newAccount !== account || newRole !== role) {
-      authorize()
+      try {
+        await authorize()
+      } catch (e) {
+        console.warn(e)
+      }
     }
   }
 
@@ -83,7 +87,13 @@ export default () => {
   })
 
   if (!status) {
-    authorize()
+    (async () => {
+      try {
+        await authorize()
+      } catch (e) {
+        console.warn(e)
+      }
+    })()
   }
 
   if (!status && account !== '') {

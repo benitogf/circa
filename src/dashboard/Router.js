@@ -1,7 +1,7 @@
 
 import React, { memo } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Locks from './Locks'
+import Stocks from './Stocks'
 import Settings from './Settings'
 import Boxes from '../boxes/Boxes'
 import Box from '../boxes/Box'
@@ -19,11 +19,9 @@ import R404 from '../404'
 export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
   return <Switch>
-    <Route
-      exact
-      path="/dashboard"
-      render={() => <Locks />}
-    />
+    <Route exact path="/dashboard" render={() =>
+      <Stocks authorize={authorize} />
+    } />
     <Route exact path="/dashboard/boxes" render={() =>
       <Boxes authorize={authorize} />
     } />

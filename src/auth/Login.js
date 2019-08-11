@@ -80,7 +80,7 @@ export default ({ status, authorize }) => {
         window.localStorage.setItem('role', response.role)
         await authorize()
       } catch (e) {
-        console.error('nope', e)
+        console.warn('nope', e)
         setPassword('')
         setError('Unable to authorize')
         setLoading(false)

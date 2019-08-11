@@ -51,7 +51,7 @@ export const fetch = async (url, authorize) => {
       }
     }).json()
   } catch (e) {
-    console.error(e)
+    console.warn(e)
     if (e && e.response && (e.response.status === 401 || e.response.status === 403)) {
       try {
         await authorize(e)
@@ -79,7 +79,7 @@ export const unpublish = async (url, authorize) => {
       }
     })
   } catch (e) {
-    console.error(e)
+    console.warn(e)
     if (e && e.response && e.response.status === 401) {
       try {
         await authorize(e)
@@ -110,7 +110,7 @@ export const publish = async (url, data, authorize) => {
       } : data
     }).json()
   } catch (e) {
-    console.error(e)
+    console.warn(e)
     if (e && e.response && e.response.status === 401) {
       try {
         await authorize(e)
@@ -181,15 +181,24 @@ export const subscribe = (url, socket, authorize, dispatch) => () => {
       )
     })
   } else {
+    socket.onopen = () => {
+      if (!unmounted) {
+        dispatch({ type: 'open', data: socket })
+      }
+    }
     socket.onerror = async (e) => {
-      console.error(url, e)
+      console.warn(url, e)
       // there's no propagation of the response
       // so close, refresh token and remount is done
       // to any error
       socket.close()
       if (!unmounted) {
         if (!socket.frozen) {
-          await authorize()
+          try {
+            await authorize()
+          } catch (e) {
+            console.warn(e)
+          }
           if (!unmounted) {
             dispatch({ type: 'close' })
           }
