@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import { useSubscribe } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -18,8 +19,8 @@ import TableRow from '@material-ui/core/TableRow'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Slider from '@material-ui/core/Slider'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
-
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -56,10 +57,6 @@ const rootStyles = makeStyles((theme) => ({
   listHeader: {
     background: theme.palette.primary.main
   },
-  listSection: {
-    textAlign: 'center',
-    background: props => props.lights ? '#e2e2e2' : '#000'
-  },
   select: {
     background: '#41ce157a',
     borderRadius: 5
@@ -72,8 +69,18 @@ const rootStyles = makeStyles((theme) => ({
   tableHead: {
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
-  sectionHeader: {
+  timeHeader: {
     top: 55
+  },
+  timeHeaderContent: {
+    background: props => props.lights ? '#bcdcf9' : '#172735'
+  },
+  sectionHeader: {
+    top: 115
+  },
+  sectionHeaderContent: {
+    textAlign: 'center',
+    background: props => props.lights ? '#e2e2e2' : '#000'
   },
   selectInput: {
     paddingTop: 10,
@@ -81,10 +88,16 @@ const rootStyles = makeStyles((theme) => ({
   },
   lineChart: {
     margin: '3em auto',
+  },
+  slider: {
+    marginLeft: '3em',
+    marginRight: '3em'
   }
 }))
 
-const mapStocks = (stocks, country) => stocks.filter((s) => s.data.country === country).map((stock) => ({
+const reverseIndex = (index) => index === 0 ? index : -1 * index
+
+const mapStocks = (stocks, country, timeIndex) => stocks.filter((s) => s.index === stocks[reverseIndex(timeIndex)].index && s.data.country === country).map((stock) => ({
   name: stock.data.id.replace(':IND', ''),
   fullName: stock.data.name,
   price: stock.data.price,
@@ -98,24 +111,41 @@ const getCountries = (stocks) => stocks.reduce((result, current) => {
   return result
 }, [])
 
+const getIndices = (stocks) => stocks.reduce((result, current, index) => {
+  const hex = parseInt(current.index, 16)
+  if (result.filter(i => i.hex === hex).length === 0) {
+    result.push({
+      label: moment.unix(hex / 1000000000).format('DD/MM/YY'),
+      value: reverseIndex(index),
+      hex,
+    })
+  }
+  return result
+}, [])
+
 export default ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [stocks, socket] = useSubscribe('stocks/*/*', authorize)
-  const [country, setCountry] = useState('HK')
   const active = socket && socket.readyState === WebSocket.OPEN
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('xs'))
   const tablet = useMediaQuery(theme.breakpoints.down('sm'))
   const laptop = useMediaQuery(theme.breakpoints.down('md'))
-  const stocksMap = stocks ? mapStocks(stocks, country) : null
+
+  // country select
+  const [country, setCountry] = useState('HK')
+
+  // time slider
+  const stocksIndices = stocks ? getIndices(stocks) : null
+  const [timeIndex, setTimeIndex] = useState(0)
 
   // table
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name')
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
-  function handleRequestSort(event, property) {
+  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('name')
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  function handleRequestSort(_event, property) {
     const isDesc = orderBy === property && order === 'desc'
     setOrder(isDesc ? 'asc' : 'desc')
     setOrderBy(property)
@@ -123,13 +153,15 @@ export default ({ authorize }) => {
   const createSortHandler = property => event => {
     handleRequestSort(event, property)
   }
-  function handleChangePage(event, newPage) {
+  function handleChangePage(_event, newPage) {
     setPage(newPage)
   }
   function handleChangeRowsPerPage(event) {
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
+
+  const stocksMap = stocks ? mapStocks(stocks, country, timeIndex) : null
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
@@ -153,6 +185,29 @@ export default ({ authorize }) => {
       </List>
       {(!stocks || !active) && <LinearProgress />}
     </AppBar>
+    {stocksMap && <AppBar className={styles.timeHeader} position="sticky" color="default">
+      <List className={styles.list}
+        component="nav">
+        <ListItem className={styles.timeHeaderContent}>
+          {stocksIndices && <Slider
+            value={timeIndex}
+            onChangeCommitted={(e, v) => {
+              const found = stocksIndices.filter(s => s.value === v)
+              if (found.length > 0) {
+                setTimeIndex(found[0].value)
+              }
+            }}
+            className={styles.slider}
+            getAriaValueText={(_v, i) => stocksIndices[i].label}
+            aria-labelledby="time-slider"
+            valueLabelDisplay="off"
+            marks={stocksIndices}
+            min={stocksIndices[stocksIndices.length - 1].value}
+            max={0}
+          />}
+        </ListItem>
+      </List>
+    </AppBar>}
     {stocksMap && <Table className={styles.table}>
       <TableHead className={styles.tableHead}>
         <TableRow>
@@ -176,9 +231,8 @@ export default ({ authorize }) => {
           </TableRow>)}
       </TableBody>
     </Table>}
-    {stocksMap && <TablePagination
+    {stocksMap && <TablePagination component="div"
       rowsPerPageOptions={[10, 25, 50]}
-      component="div"
       count={stocksMap.length}
       rowsPerPage={rowsPerPage}
       page={page}
@@ -192,9 +246,8 @@ export default ({ authorize }) => {
       onChangeRowsPerPage={handleChangeRowsPerPage}
     />}
     {stocksMap && <AppBar className={styles.sectionHeader} position="sticky" color="default">
-      <List className={styles.list}
-        component="nav">
-        <ListItem className={styles.listSection}>
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.sectionHeaderContent}>
           <ListItemText className={styles.listHeaderText} primary={'price/index'} />
         </ListItem>
       </List>
@@ -207,9 +260,8 @@ export default ({ authorize }) => {
       <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />
     </LineChart>}
     {stocksMap && <AppBar className={styles.sectionHeader} position="sticky" color="default">
-      <List className={styles.list}
-        component="nav">
-        <ListItem className={styles.listSection}>
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.sectionHeaderContent}>
           <ListItemText className={styles.listHeaderText} primary={'priceChange1Day/index'} />
         </ListItem>
       </List>
