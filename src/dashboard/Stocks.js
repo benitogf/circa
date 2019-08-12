@@ -97,12 +97,13 @@ const rootStyles = makeStyles((theme) => ({
 
 const reverseIndex = (index) => index === 0 ? index : -1 * index
 
-const mapStocks = (stocks, country, timeIndex) => stocks.filter((s) => s.index === stocks[reverseIndex(timeIndex)].index && s.data.country === country).map((stock) => ({
-  name: stock.data.id.replace(':IND', ''),
-  fullName: stock.data.name,
-  price: stock.data.price,
-  priceChange1Day: stock.data.priceChange1Day
-}))
+const mapStocks = (stocks, country, timeIndex) => stocks.filter((s) =>
+  s.index === stocks[reverseIndex(timeIndex)].index && s.data.country === country).map((stock) => ({
+    name: stock.data.id.replace(':IND', ''),
+    fullName: stock.data.name,
+    price: stock.data.price,
+    priceChange1Day: stock.data.priceChange1Day
+  }))
 
 const getCountries = (stocks) => stocks.reduce((result, current) => {
   if (result.indexOf(current.data.country) === -1) {
@@ -122,6 +123,9 @@ const getIndices = (stocks) => stocks.reduce((result, current, index) => {
   }
   return result
 }, [])
+
+const getClosestIndex = (goal, indices) => indices.reduce((prev, curr) =>
+  (Math.abs(curr.value - goal) < Math.abs(prev.value - goal) ? curr : prev)).value
 
 export default ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -162,6 +166,7 @@ export default ({ authorize }) => {
   }
 
   const stocksMap = stocks ? mapStocks(stocks, country, timeIndex) : null
+  const notEmpty = stocksMap && stocksMap.length > 0
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
@@ -185,18 +190,13 @@ export default ({ authorize }) => {
       </List>
       {(!stocks || !active) && <LinearProgress />}
     </AppBar>
-    {stocksMap && <AppBar className={styles.timeHeader} position="sticky" color="default">
+    {notEmpty && <AppBar className={styles.timeHeader} position="sticky" color="default">
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.timeHeaderContent}>
           {stocksIndices && <Slider
             value={timeIndex}
-            onChangeCommitted={(e, v) => {
-              const found = stocksIndices.filter(s => s.value === v)
-              if (found.length > 0) {
-                setTimeIndex(found[0].value)
-              }
-            }}
+            onChangeCommitted={(_e, v) => setTimeIndex(getClosestIndex(v, stocksIndices))}
             className={styles.slider}
             getAriaValueText={(_v, i) => stocksIndices[i].label}
             aria-labelledby="time-slider"
@@ -208,7 +208,7 @@ export default ({ authorize }) => {
         </ListItem>
       </List>
     </AppBar>}
-    {stocksMap && <Table className={styles.table}>
+    {notEmpty && <Table className={styles.table}>
       <TableHead className={styles.tableHead}>
         <TableRow>
           {Object.keys(stocksMap[0]).map((v, i) => v !== 'priceChange1Day' || (!mobile && !tablet) ?
@@ -231,7 +231,7 @@ export default ({ authorize }) => {
           </TableRow>)}
       </TableBody>
     </Table>}
-    {stocksMap && <TablePagination component="div"
+    {notEmpty && <TablePagination component="div"
       rowsPerPageOptions={[10, 25, 50]}
       count={stocksMap.length}
       rowsPerPage={rowsPerPage}
@@ -245,28 +245,28 @@ export default ({ authorize }) => {
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
     />}
-    {stocksMap && <AppBar className={styles.sectionHeader} position="sticky" color="default">
+    {notEmpty && <AppBar className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
           <ListItemText className={styles.listHeaderText} primary={'price/index'} />
         </ListItem>
       </List>
     </AppBar>}
-    {stocksMap && <LineChart className={styles.lineChart} width={mobile ? 320 : tablet ? 350 : laptop ? 700 : 900} height={400} data={stocksMap}>
+    {notEmpty && <LineChart className={styles.lineChart} width={mobile ? 320 : tablet ? 340 : laptop ? 700 : 900} height={400} data={stocksMap}>
       <XAxis dataKey="name" stroke={lights ? '#5ebd56' : '#bed294'} />
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
       <Line type="monotone" dataKey="price" stroke="#03a9f4" />
       <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />
     </LineChart>}
-    {stocksMap && <AppBar className={styles.sectionHeader} position="sticky" color="default">
+    {notEmpty && <AppBar className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
           <ListItemText className={styles.listHeaderText} primary={'priceChange1Day/index'} />
         </ListItem>
       </List>
     </AppBar>}
-    {stocksMap && <LineChart className={styles.lineChart} width={mobile ? 320 : tablet ? 350 : laptop ? 700 : 900} height={400} data={stocksMap}>
+    {notEmpty && <LineChart className={styles.lineChart} width={mobile ? 320 : tablet ? 340 : laptop ? 700 : 900} height={400} data={stocksMap}>
       <XAxis dataKey="name" stroke={lights ? '#5ebd56' : '#bed294'} />
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
