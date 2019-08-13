@@ -42,7 +42,8 @@ const mapStock = (stocks) => stocks.map((stock) => ({
   fullName: stock.data.name,
   price: stock.data.price,
   priceDate: stock.data.priceDate,
-  priceChange1Day: stock.data.priceChange1Day
+  priceChange1Day: stock.data.priceChange1Day,
+  percentChange1Day: stock.data.percentChange1Day
 }))
 
 export default ({ authorize, match }) => {
@@ -66,7 +67,6 @@ export default ({ authorize, match }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          {/* <ListItemText className={styles.listHeaderText} primary={match.params.id + ' stock indices'} /> */}
           {(() => active && stock && stock.length ?
             <ListItemText className={styles.listHeaderText} primary={stock[0].data.country + ' - ' + stock[0].data.name} /> :
             <CircularProgress color="inherit" size={24} />)()}
@@ -100,6 +100,20 @@ export default ({ authorize, match }) => {
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
       <Line type="monotone" dataKey="priceChange1Day" stroke="#03a9f4" />
+      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
+    </LineChart>,
+    <AppBar key="percentChartHeader" className={styles.sectionHeader} position="sticky" color="default">
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.sectionHeaderContent}>
+          <ListItemText className={styles.listHeaderText} primary={'date/percent change'} />
+        </ListItem>
+      </List>
+    </AppBar>,
+    <LineChart key="percentChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stockMap}>
+      <XAxis dataKey="priceDate" stroke={lights ? '#5ebd56' : '#bed294'} />
+      <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
+      <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
+      <Line type="monotone" dataKey="percentChange1Day" stroke="#03a9f4" />
       <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
     </LineChart>
     ]}
