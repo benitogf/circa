@@ -106,11 +106,9 @@ export default withRouter(({ authorize, date, country, history }) => {
   const chartHeight = mobile && !tablet ? 310 : tablet ? 350 : 400
 
   // table
-  const hiddenMobileFields = ['priceChange1Day', 'price']
-  const hiddenTabletFields = ['price']
+  const hiddenMobileFields = ['fullName']
   const responsiveTableFields = (field) => (!mobile && !tablet) ||
-    (mobile && hiddenMobileFields.indexOf(field) === -1) ||
-    (tablet && hiddenTabletFields.indexOf(field) === -1)
+    ((mobile || tablet) && hiddenMobileFields.indexOf(field) === -1)
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('name')
 

@@ -61,7 +61,6 @@ export default ({ authorize, match }) => {
 
   const stockMap = stock ? mapStock(stock) : null
 
-  console.log(stock)
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
       <List className={styles.list}
