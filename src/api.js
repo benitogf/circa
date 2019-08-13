@@ -239,6 +239,13 @@ export const useSubscribe = (url, authorize) => {
     socket: null,
     data: null
   })
+  if (state.socket) {
+    const socketUrl = state.socket.wsUrl.split('//' + domain + '/')[1]
+    if (socketUrl !== url && socketUrl !== undefined) {
+      state.socket.close()
+      dispatch({ type: 'close' })
+    }
+  }
   useEffect(subscribe(url, state.socket, authorize, dispatch), [state.socket])
   return [state.data, state.socket]
 }

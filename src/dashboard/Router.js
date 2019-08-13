@@ -1,7 +1,6 @@
 
 import React, { memo } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Stocks from './Stocks'
 import Settings from './Settings'
 import Boxes from '../boxes/Boxes'
 import Box from '../boxes/Box'
@@ -15,12 +14,13 @@ import User from '../users/User'
 import Storage from '../storage/Storage'
 import Key from '../storage/Key'
 import R404 from '../404'
+import Market from './Market';
 
 export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
   return <Switch>
     <Route exact path="/dashboard" render={() =>
-      <Stocks authorize={authorize} />
+      <Market authorize={authorize} />
     } />
     <Route exact path="/dashboard/boxes" render={() =>
       <Boxes authorize={authorize} />
