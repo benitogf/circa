@@ -70,7 +70,8 @@ export default ({ authorize }) => {
   const active = socket && socket.readyState === WebSocket.OPEN
 
   // country select
-  const [country, setCountry] = useState('HK')
+  const localCountry = window.localStorage.getItem('market:country')
+  const [country, setCountry] = useState(!localCountry ? 'HK' : localCountry)
 
   // time slider
   const indices = dates ? getIndices(dates) : null
@@ -94,6 +95,7 @@ export default ({ authorize }) => {
             value={country}
             onChange={(e) => {
               setCountry(e.target.value)
+              window.localStorage.setItem('market:country', e.target.value)
             }}
             input={<OutlinedInput name="country" id="country" />}
           >

@@ -121,6 +121,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
   const isStorage = pathname.length === 3 && pathname[2] === 'storage'
   const isSettings = pathname.length === 3 && pathname[2] === 'settings'
   // second level
+  const isStock = pathname.length > 3 && pathname[2] === 'stock'
   const isBox = pathname.length > 3 && pathname[2] === 'box'
   const isPost = pathname.length > 3 && pathname[2] === 'post'
   const isMail = pathname.length > 3 && pathname[2] === 'mail'
@@ -161,6 +162,12 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
         <Breadcrumbs className={toolbar.breadcrumbs} aria-label="Breadcrumb">
           {isDashboard && (
             <span className={toolbar.breadcrumbOff}>Dashboard</span>
+          )}
+          {isStock && (
+            <Link className={toolbar.breadcrumb} to="/dashboard">Market</Link>
+          )}
+          {isStock && (
+            <span className={toolbar.breadcrumbOff}>Stock</span>
           )}
           {isBoxes && (
             <span className={toolbar.breadcrumbOff}>Boxes</span>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useSubscribe } from '../api'
+import { withRouter } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import AppBar from '@material-ui/core/AppBar'
@@ -11,7 +12,6 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import TablePagination from '@material-ui/core/TablePagination'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
@@ -69,12 +69,11 @@ const rootStyles = makeStyles((theme) => ({
       margin: '1em auto',
     }
   },
-  paginationActions: {
-    margin: 0
-  },
-  paginationInput: {
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 7
+  tableRow: {
+    textDecoration: 'none',
+    '&:hover': {
+      background: '#efefef',
+      cursor: 'pointer'
     }
   },
   tableCellRoot: {
@@ -86,13 +85,13 @@ const rootStyles = makeStyles((theme) => ({
 
 const mapStocks = (stocks, country) => stocks.filter((s) =>
   s.data.country === country).map((stock) => ({
-    name: stock.data.id.replace(':IND', ''),
+    name: stock.data.id.replace(':IND', '').replace('-', ''),
     fullName: stock.data.name,
     price: stock.data.price,
     priceChange1Day: stock.data.priceChange1Day
   }))
 
-export default ({ authorize, date, country }) => {
+export default withRouter(({ authorize, date, country, history }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [stocks, socket] = useSubscribe('stocks/*/' + date, authorize)
@@ -114,8 +113,7 @@ export default ({ authorize, date, country }) => {
     (tablet && hiddenTabletFields.indexOf(field) === -1)
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('name')
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+
   function handleRequestSort(_event, property) {
     const isDesc = orderBy === property && order === 'desc'
     setOrder(isDesc ? 'asc' : 'desc')
@@ -123,13 +121,6 @@ export default ({ authorize, date, country }) => {
   }
   const createSortHandler = property => event => {
     handleRequestSort(event, property)
-  }
-  function handleChangePage(_event, newPage) {
-    setPage(newPage)
-  }
-  function handleChangeRowsPerPage(event) {
-    setRowsPerPage(+event.target.value)
-    setPage(0)
   }
 
   const stocksMap = stocks ? mapStocks(stocks, country) : null
@@ -155,8 +146,10 @@ export default ({ authorize, date, country }) => {
     </TableHead>
     <TableBody>
       {stableSort(stocksMap, getSorting(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((row, index) => <TableRow key={index}>
+        .map((row, index) => <TableRow key={index}
+          className={styles.tableRow}
+          hover
+          onClick={() => history.push('/dashboard/stock/' + row['name'])}>
           {Object.keys(stocksMap[0]).map((v, i) => responsiveTableFields(v) ?
             <TableCell classes={{
               root: styles.tableCellRoot
@@ -168,24 +161,6 @@ export default ({ authorize, date, country }) => {
         </TableRow>)}
     </TableBody>
   </Table>,
-  <TablePagination key="tablePagination" component="div"
-    classes={{
-      actions: styles.paginationActions,
-      input: styles.paginationInput
-    }}
-    rowsPerPageOptions={[10, 25, 50]}
-    count={stocksMap.length}
-    rowsPerPage={rowsPerPage}
-    page={page}
-    backIconButtonProps={{
-      'aria-label': 'previous page',
-    }}
-    nextIconButtonProps={{
-      'aria-label': 'next page',
-    }}
-    onChangePage={handleChangePage}
-    onChangeRowsPerPage={handleChangeRowsPerPage}
-  />,
   <AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
     <List className={styles.list} component="nav">
       <ListItem className={styles.sectionHeaderContent}>
@@ -203,7 +178,7 @@ export default ({ authorize, date, country }) => {
   <AppBar key="priceChangeChartHeader" className={styles.sectionHeader} position="sticky" color="default">
     <List className={styles.list} component="nav">
       <ListItem className={styles.sectionHeaderContent}>
-        <ListItemText className={styles.listHeaderText} primary={'priceChange1Day/index'} />
+        <ListItemText className={styles.listHeaderText} primary={'price change/index'} />
       </ListItem>
     </List>
   </AppBar>,
@@ -216,4 +191,4 @@ export default ({ authorize, date, country }) => {
   </LineChart>] : <AppBar key="loadingHeader" className={styles.loadingHeader} position="sticky" color="default">
       <LinearProgress />
     </AppBar>
-}
+})

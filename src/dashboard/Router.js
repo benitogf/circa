@@ -14,7 +14,9 @@ import User from '../users/User'
 import Storage from '../storage/Storage'
 import Key from '../storage/Key'
 import R404 from '../404'
-import Market from './Market';
+import Market from '../market/Market'
+import Stock from '../market/Stock'
+
 
 export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
@@ -27,6 +29,9 @@ export default memo(({ dispatch, authorize }) => {
     } />
     <Route exact path="/dashboard/settings" render={() =>
       <Settings dispatch={dispatch} />
+    } />
+    <Route exact path="/dashboard/stock/:id" render={({ match }) =>
+      <Stock match={match} authorize={authorize} />
     } />
     {(role === 'admin' || role === 'root') && (
       <Route exact path="/dashboard/post/:id" render={({ match }) =>
