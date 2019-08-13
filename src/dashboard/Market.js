@@ -13,6 +13,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Slider from '@material-ui/core/Slider'
 import Stocks from './Stocks'
+import { countries } from '../constants'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +29,7 @@ const rootStyles = makeStyles((theme) => ({
   menu: {
     top: '82px !important',
     height: 300,
-    left: '-10px !important'
+    left: '0px !important'
   },
   timeHeader: {
     top: 55
@@ -56,16 +57,11 @@ const getIndices = (dates) => dates.reduce((result, current) => {
     result.push({
       label: moment.unix(hex / 1000000000).format('DD/MM/YY'),
       value: hex,
-      index: current.data.date
+      date: current.data.date
     })
   }
   return result
 }, [])
-
-const getClosestIndex = (goal, indices) => indices.reduce((prev, curr) =>
-  (Math.abs(curr.value - goal) < Math.abs(prev.value - goal) ? curr : prev)).value
-
-const countries = ["CZ", "GH", "LT", "RO", "KZ", "MULT", "EE", "LV", "MT", "SE", "BG", "TZ", "MA", "AT", "MK", "HR", "IL", "SK", "IE", "MU", "PT", "OM", "LU", "BE", "LB", "CY", "BA", "NA", "IT", "NL", "IS", "ES", "NG", "HU", "PS", "PL", "SI", "JO", "NO", "RS", "KE", "CH", "UA", "KW", "QA", "BW", "FI", "ZA", "DK", "SA", "GR", "RU", "EU", "ME", "AE", "DE", "GB", "BH", "TN", "TR", "FR", "BM", "CL", "CO", "JM", "PA", "CA", "CR", "MX", "BR", "PE", "AR", "VE", "US", "LK", "PH", "VN", "LA", "TH", "NZ", "SG", "PK", "ID", "MN", "JP", "AU", "HK", "TW", "BD", "KR", "IN", "MY", "CN"]
 
 export default ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -80,11 +76,7 @@ export default ({ authorize }) => {
   const indices = dates ? getIndices(dates) : null
   const [timeIndex, setTimeIndex] = useState(null)
 
-  const stockskKey = timeIndex ? indices.filter(ind => ind.value === timeIndex)[0] : null
-
-  // if (timeIndex) {
-  //   console.log(timeIndex, stockskKey)
-  // }
+  const date = timeIndex ? indices.filter(ind => ind.value === timeIndex)[0].date : null
 
   if (!timeIndex && indices) {
     setTimeIndex(indices[0].value)
@@ -117,18 +109,19 @@ export default ({ authorize }) => {
         <ListItem className={styles.timeHeaderContent}>
           {timeIndex && <Slider
             value={timeIndex}
-            onChangeCommitted={(_e, v) => setTimeIndex(getClosestIndex(v, indices))}
+            onChangeCommitted={(_e, v) => setTimeIndex(v)}
             className={styles.slider}
             getAriaValueText={(_v, i) => indices[i].label}
             aria-labelledby="time-slider"
             valueLabelDisplay="off"
             marks={indices}
+            step={null}
             min={indices[indices.length - 1].value}
             max={indices[0].value}
           />}
         </ListItem>
       </List>
     </AppBar>}
-    {stockskKey && <Stocks authorize={authorize} date={stockskKey.index} country={country} />}
+    {date && <Stocks authorize={authorize} date={date} country={country} />}
   </Paper>
 }

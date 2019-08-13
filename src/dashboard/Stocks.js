@@ -43,7 +43,6 @@ function getSorting(order, orderBy) {
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    overflow: 'auto'
   },
   list: {
     padding: 0
@@ -65,7 +64,23 @@ const rootStyles = makeStyles((theme) => ({
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
   lineChart: {
-    margin: '3em auto',
+    margin: '1em 0',
+    [theme.breakpoints.up('xs')]: {
+      margin: '1em auto',
+    }
+  },
+  paginationActions: {
+    margin: 0
+  },
+  paginationInput: {
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 7
+    }
+  },
+  tableCellRoot: {
+    [theme.breakpoints.down('xs')]: {
+      padding: '14px 20px 14px 9px'
+    }
   }
 }))
 
@@ -84,10 +99,19 @@ export default ({ authorize, date, country }) => {
   const active = socket && socket.readyState === WebSocket.OPEN
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('xs'))
-  const tablet = useMediaQuery(theme.breakpoints.down('sm'))
-  const laptop = useMediaQuery(theme.breakpoints.down('md'))
+  const tablet = useMediaQuery(theme.breakpoints.between('s', 'sm'))
+  const laptop = useMediaQuery(theme.breakpoints.between('sm', 'md'))
+
+  // charts
+  const chartWidth = mobile && !tablet ? 310 : tablet ? 350 : laptop ? 700 : 900
+  const chartHeight = mobile && !tablet ? 310 : tablet ? 350 : 400
 
   // table
+  const hiddenMobileFields = ['priceChange1Day', 'price']
+  const hiddenTabletFields = ['price']
+  const responsiveTableFields = (field) => (!mobile && !tablet) ||
+    (mobile && hiddenMobileFields.indexOf(field) === -1) ||
+    (tablet && hiddenTabletFields.indexOf(field) === -1)
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState('name')
   const [page, setPage] = useState(0)
@@ -117,8 +141,11 @@ export default ({ authorize, date, country }) => {
   <Table key="table" className={styles.table}>
     <TableHead className={styles.tableHead}>
       <TableRow>
-        {Object.keys(stocksMap[0]).map((v, i) => v !== 'priceChange1Day' || (!mobile && !tablet) ?
-          <TableCell key={v} align={i > 0 ? 'right' : 'left'}>
+        {Object.keys(stocksMap[0]).map((v, i) => responsiveTableFields(v) ?
+          <TableCell classes={{
+            root: styles.tableCellRoot
+          }}
+            key={v} align={i > 0 ? 'right' : 'left'}>
             <TableSortLabel active={orderBy === v}
               direction={order}
               onClick={createSortHandler(v)}
@@ -130,14 +157,22 @@ export default ({ authorize, date, country }) => {
       {stableSort(stocksMap, getSorting(order, orderBy))
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((row, index) => <TableRow key={index}>
-          {Object.keys(stocksMap[0]).map((v, i) => v !== 'priceChange1Day' || (!mobile && !tablet) ?
-            <TableCell key={v} component={i === 0 ? 'th' : ''}
+          {Object.keys(stocksMap[0]).map((v, i) => responsiveTableFields(v) ?
+            <TableCell classes={{
+              root: styles.tableCellRoot
+            }}
+              key={v}
+              component={i === 0 ? 'th' : ''}
               scope={i === 0 ? 'row' : ''}
               align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell> : null)}
         </TableRow>)}
     </TableBody>
   </Table>,
   <TablePagination key="tablePagination" component="div"
+    classes={{
+      actions: styles.paginationActions,
+      input: styles.paginationInput
+    }}
     rowsPerPageOptions={[10, 25, 50]}
     count={stocksMap.length}
     rowsPerPage={rowsPerPage}
@@ -158,7 +193,7 @@ export default ({ authorize, date, country }) => {
       </ListItem>
     </List>
   </AppBar>,
-  <LineChart key="priceChart" className={styles.lineChart} width={mobile ? 320 : tablet ? 340 : laptop ? 700 : 900} height={400} data={stocksMap}>
+  <LineChart key="priceChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stocksMap}>
     <XAxis dataKey="name" stroke={lights ? '#5ebd56' : '#bed294'} />
     <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
     <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
@@ -172,7 +207,7 @@ export default ({ authorize, date, country }) => {
       </ListItem>
     </List>
   </AppBar>,
-  <LineChart key="priceChangeChart" className={styles.lineChart} width={mobile ? 320 : tablet ? 340 : laptop ? 700 : 900} height={400} data={stocksMap}>
+  <LineChart key="priceChangeChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stocksMap}>
     <XAxis dataKey="name" stroke={lights ? '#5ebd56' : '#bed294'} />
     <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
     <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />

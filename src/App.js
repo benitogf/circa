@@ -29,14 +29,6 @@ const reducer = (state, action) => {
   }
 }
 
-// const visibilityChange = () => {
-//   if (document.hidden) {
-//     document.dispatchEvent(new Event('freeze'))
-//   } else {
-//     document.dispatchEvent(new Event('resume'))
-//   }
-// }
-
 export default () => {
   const account = window.localStorage.getItem('account')
   const role = window.localStorage.getItem('role')
@@ -69,10 +61,6 @@ export default () => {
     }
   }
 
-  // if (navigator.userAgent.match(/Android|iPhone|iPad|iPod/i)) {
-  //   document.addEventListener('visibilitychange', visibilityChange)
-  // }
-
   const theme = createMuiTheme({
     palette: {
       type: !lights && status === 'authorized' ? 'dark' : 'light',
@@ -82,6 +70,16 @@ export default () => {
       secondary: {
         main: '#ffca28',
       },
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        s: 375,
+        sm: 675,
+        md: 960,
+        lg: 1280,
+        xl: 1920,
+      }
     },
     typography: { useNextVariants: true },
   })

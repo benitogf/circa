@@ -240,7 +240,7 @@ export const useSubscribe = (url, authorize) => {
     data: null
   })
   if (state.socket) {
-    const socketUrl = state.socket.wsUrl.split('//' + domain + '/')[1]
+    const socketUrl = state.socket.wsUrl.split(domain + '/')[1]
     if (socketUrl !== url && socketUrl !== undefined) {
       state.socket.close()
       dispatch({ type: 'close' })
