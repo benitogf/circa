@@ -14,6 +14,9 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Slider from '@material-ui/core/Slider'
 import Stocks from './Stocks'
 import { countries } from '../constants'
+import MobileStepper from '@material-ui/core/MobileStepper'
+import Button from '@material-ui/core/Button'
+import Hidden from '@material-ui/core/Hidden'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -35,7 +38,14 @@ const rootStyles = makeStyles((theme) => ({
     top: 55
   },
   timeHeaderContent: {
-    background: props => props.lights ? '#bcdcf9' : '#172735'
+    background: props => props.lights ? '#bcdcf9' : '#303030'
+  },
+  timeSteps: {
+    flexGrow: 1,
+  },
+  hiddenContainer: {
+    display: 'flex',
+    flex: 1
   },
   select: {
     background: '#41ce157a',
@@ -77,10 +87,26 @@ export default ({ authorize }) => {
   const indices = dates ? getIndices(dates) : null
   const [timeIndex, setTimeIndex] = useState(null)
 
+  // mobile step
+  const [activeStep, setActiveStep] = useState(0)
+  function handleNext() {
+    setActiveStep(prevActiveStep => {
+      setTimeIndex(indices[indices.length - (prevActiveStep + 2)].value)
+      return prevActiveStep + 1
+    })
+  }
+  function handleBack() {
+    setActiveStep(prevActiveStep => {
+      setTimeIndex(indices[indices.length - prevActiveStep].value)
+      return prevActiveStep - 1
+    })
+  }
+
   const date = timeIndex ? indices.filter(ind => ind.value === timeIndex)[0].date : null
 
   if (!timeIndex && indices) {
     setTimeIndex(indices[0].value)
+    setActiveStep(indices.length - 1)
   }
 
   return <Paper className={styles.root} elevation={0}>
@@ -88,7 +114,9 @@ export default ({ authorize }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          <ListItemText className={styles.listHeaderText} primary={country + ' stock indices'} />
+          {timeIndex &&
+            <ListItemText className={styles.listHeaderText}
+              primary={country + ' stock indices (' + indices[indices.length - 1 - activeStep].label + ')'} />}
           <Select className={styles.select}
             MenuProps={{ className: styles.menu }}
             inputProps={{ className: styles.selectInput }}
@@ -109,18 +137,42 @@ export default ({ authorize }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.timeHeaderContent}>
-          {timeIndex && <Slider
-            value={timeIndex}
-            onChangeCommitted={(_e, v) => setTimeIndex(v)}
-            className={styles.slider}
-            getAriaValueText={(_v, i) => indices[i].label}
-            aria-labelledby="time-slider"
-            valueLabelDisplay="off"
-            marks={indices}
-            step={null}
-            min={indices[indices.length - 1].value}
-            max={indices[0].value}
-          />}
+          <Hidden className={styles.hiddenContainer} mdDown>
+            {timeIndex && <Slider
+              value={timeIndex}
+              onChangeCommitted={(_e, v) => {
+                setTimeIndex(v)
+                setActiveStep(indices.length - 1 - indices.findIndex(iv => iv.value === v))
+              }}
+              className={styles.slider}
+              getAriaValueText={(_v, i) => indices[i].label}
+              aria-labelledby="time-slider"
+              valueLabelDisplay="off"
+              marks={indices}
+              step={null}
+              min={indices[indices.length - 1].value}
+              max={indices[0].value}
+            />}
+          </Hidden>
+          <Hidden className={styles.hiddenContainer} lgUp>
+            {timeIndex && <MobileStepper
+              variant="progress"
+              steps={indices.length}
+              position="static"
+              activeStep={activeStep}
+              className={styles.timeSteps}
+              nextButton={
+                <Button size="small" onClick={handleNext} disabled={activeStep === indices.length - 1}>
+                  Next
+                </Button>
+              }
+              backButton={
+                <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+                  Back
+                </Button>
+              }
+            />}
+          </Hidden>
         </ListItem>
       </List>
     </AppBar>}
