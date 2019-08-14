@@ -225,6 +225,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
       autoComplete="off">
       <TextField
         required
+        InputLabelProps={{ shrink: true }}
         margin="dense"
         id="name"
         name="name"

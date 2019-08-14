@@ -14,13 +14,15 @@ import TableRow from '@material-ui/core/TableRow'
 import TablePagination from '@material-ui/core/TablePagination'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
     overflow: 'auto',
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
-    flex: 1
+    background: 'transparent',
+    flex: 1,
+    marginBottom: 57
   },
   list: {
     padding: 0
@@ -37,6 +39,12 @@ const rootStyles = makeStyles((theme) => ({
     marginTop: 4,
     marginRight: 20
   },
+  searchInputRoot: {
+    padding: '14px 12px 10px',
+  },
+  searchInputLabel: {
+    transform: 'translate(14px, 14px) scale(1)',
+  },
   tablePagination: {
     position: 'fixed',
     bottom: 0,
@@ -45,8 +53,16 @@ const rootStyles = makeStyles((theme) => ({
     borderTop: '1px solid #b5b5b57a',
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
+  paginationActions: {
+    margin: 0
+  },
+  paginationInput: {
+    [theme.breakpoints.down('xs')]: {
+      marginRight: 7
+    }
+  },
   tableRoot: {
-    marginBottom: 57
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
   },
   tableRow: {
     textDecoration: 'none',
@@ -58,6 +74,9 @@ const rootStyles = makeStyles((theme) => ({
   tableCell: {
     paddingTop: 20,
     paddingBottom: 20
+  },
+  sortButton: {
+    height: '2.88em'
   }
 }))
 
@@ -139,20 +158,33 @@ export default withRouter(({ authorize, history }) => {
             label="Search"
             className={styles.searchInput}
             value={search}
-            margin="dense"
+            margin="normal"
             fullWidth
-            autofocus
+            autoFocus
+            InputLabelProps={{
+              classes: {
+                outlined: styles.searchInputLabel
+              }
+            }}
+            InputProps={{
+              classes: {
+                input: styles.searchInputRoot
+              }
+            }}
             onChange={(e) => {
               setSearch(e.target.value)
               window.localStorage.setItem('storage:search', e.target.value)
             }}
-            margin="normal"
-            variant="filled"
+            variant="outlined"
           />
-          <TableSortLabel active
-            direction={order}
+          <Button variant="contained"
+            color="primary"
             onClick={handleRequestSort}
-          >{'key'}</TableSortLabel>
+            className={styles.sortButton}>
+            <TableSortLabel active
+              direction={order}
+            ></TableSortLabel>
+          </Button>
         </ListItem>
       </List>
       {!keys && (<LinearProgress />)}
@@ -175,9 +207,13 @@ export default withRouter(({ authorize, history }) => {
       </TableBody>
     </Table>}
     {keys && <TablePagination className={styles.tablePagination}
+      classes={{
+        actions: styles.paginationActions,
+        input: styles.paginationInput
+      }}
       rowsPerPageOptions={[15, 40, 100]}
       component="div"
-      count={keys.length}
+      count={keys.filter(key => glob(search, key)).length}
       rowsPerPage={rowsPerPage}
       page={page}
       backIconButtonProps={{

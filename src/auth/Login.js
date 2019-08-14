@@ -125,6 +125,7 @@ export default ({ status, authorize }) => {
             <TextField
               required
               autoFocus
+              InputLabelProps={{ shrink: true }}
               margin="dense"
               id="account"
               label="username"
@@ -138,6 +139,7 @@ export default ({ status, authorize }) => {
             />
             <TextField
               required
+              InputLabelProps={{ shrink: true }}
               margin="dense"
               id="password"
               label="password"

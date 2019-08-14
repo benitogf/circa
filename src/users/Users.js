@@ -25,6 +25,10 @@ const rootStyles = makeStyles((theme) => ({
   listHeaderText: {
     overflowWrap: 'break-word',
   },
+  listItem: {
+    display: 'grid',
+    padding: 0,
+  },
   text: {
     overflowWrap: 'break-word',
     padding: '1em',
@@ -65,7 +69,8 @@ export default ({ authorize }) => {
       {(!users) ? (<LinearProgress />) : users.length !== 0 &&
         <List className={styles.list} component="nav">
           {users.map((user) => [
-            <ListItem key={user.account + 'list'}
+            <ListItem className={styles.listItem}
+              key={user.account + 'list'}
               {...{ to: '/dashboard/user/' + user.account }}
               component={Link}
               button>

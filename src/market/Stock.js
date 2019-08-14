@@ -14,13 +14,15 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    overflow: 'auto'
+    overflow: 'auto',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   list: {
     padding: 0
   },
   listHeader: {
-    background: theme.palette.primary.main
+    background: theme.palette.primary.main,
+    minHeight: 55
   },
   sectionHeader: {
     top: 48

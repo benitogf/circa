@@ -25,6 +25,10 @@ const rootStyles = makeStyles((theme) => ({
   listHeaderText: {
     overflowWrap: 'break-word'
   },
+  listItem: {
+    display: 'grid',
+    padding: 0,
+  },
   text: {
     overflowWrap: 'break-word',
     padding: '1em'
@@ -48,7 +52,7 @@ export default ({ authorize }) => {
       {(!mails) ? (<LinearProgress />) : (() => mails.length !== 0 ? (
         <List className={styles.list} component="nav">
           {mails.map((mail) => [
-            <ListItem
+            <ListItem className={styles.listItem}
               {...{ to: '/dashboard/mail/' + mail.index }}
               component={Link}
               key={mail.index + 'list'}

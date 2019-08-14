@@ -84,6 +84,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeader: {
     background: theme.palette.primary.main,
+    minHeight: 50,
   },
   listHeaderText: {
     overflowWrap: 'break-word'

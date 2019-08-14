@@ -21,13 +21,15 @@ import Hidden from '@material-ui/core/Hidden'
 const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
-    overflow: 'auto'
+    overflow: 'auto',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   list: {
     padding: 0
   },
   listHeader: {
-    background: theme.palette.primary.main
+    background: theme.palette.primary.main,
+    minHeight: 55
   },
   menu: {
     top: '82px !important',
@@ -38,7 +40,7 @@ const rootStyles = makeStyles((theme) => ({
     top: 55
   },
   timeHeaderContent: {
-    background: props => props.lights ? '#bcdcf9' : '#303030'
+    background: props => props.lights ? '#fafafa' : '#303030'
   },
   timeSteps: {
     flexGrow: 1,
@@ -117,7 +119,7 @@ export default ({ authorize }) => {
           {timeIndex &&
             <ListItemText className={styles.listHeaderText}
               primary={country + ' stock indices (' + indices[indices.length - 1 - activeStep].label + ')'} />}
-          <Select className={styles.select}
+          {timeIndex && <Select className={styles.select}
             MenuProps={{ className: styles.menu }}
             inputProps={{ className: styles.selectInput }}
             value={country}
@@ -128,7 +130,7 @@ export default ({ authorize }) => {
             input={<OutlinedInput name="country" id="country" />}
           >
             {countries.map((c) => <MenuItem key={c} value={c}>{c}</MenuItem>)}
-          </Select>
+          </Select>}
         </ListItem>
       </List>
       {(!dates || !active) && <LinearProgress />}

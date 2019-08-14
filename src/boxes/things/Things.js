@@ -15,6 +15,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listItem: {
     display: 'grid',
+    padding: 0
   },
   listHeader: {
     position: 'sticky',

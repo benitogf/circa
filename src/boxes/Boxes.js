@@ -66,6 +66,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listItem: {
     display: 'grid',
+    padding: 0,
   },
   empty: {
     padding: '1em'

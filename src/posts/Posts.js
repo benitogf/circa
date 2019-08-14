@@ -74,6 +74,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   listItem: {
     display: 'grid',
+    padding: 0,
   },
   listHeader: {
     background: theme.palette.primary.main
