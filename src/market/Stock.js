@@ -24,17 +24,21 @@ const rootStyles = makeStyles((theme) => ({
     background: theme.palette.primary.main,
     minHeight: 55
   },
+  listHeaderText: {
+    fontSize: '0.9rem',
+  },
   sectionHeader: {
     top: 48
   },
   sectionHeaderContent: {
     textAlign: 'center',
+    height: 50,
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
   lineChart: {
-    margin: '1em 0',
-    [theme.breakpoints.up('xs')]: {
-      margin: '1em auto',
+    margin: '3em 0',
+    [theme.breakpoints.up('s')]: {
+      margin: '3em auto',
     }
   },
 }))
@@ -70,7 +74,7 @@ export default ({ authorize, match }) => {
         component="nav">
         <ListItem className={styles.listHeader}>
           {(() => active && stock && stock.length ?
-            <ListItemText className={styles.listHeaderText} primary={stock[0].data.country + ' - ' + stock[0].data.name} /> :
+            <ListItemText primary={stock[0].data.country + ' - ' + stock[0].data.name} /> :
             <CircularProgress color="inherit" size={24} />)()}
         </ListItem>
       </List>
@@ -79,7 +83,7 @@ export default ({ authorize, match }) => {
     {stockMap && [<AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
-          <ListItemText className={styles.listHeaderText} primary={'date/price'} />
+          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/price'} />
         </ListItem>
       </List>
     </AppBar>,
@@ -93,7 +97,7 @@ export default ({ authorize, match }) => {
     <AppBar key="priceChangeChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
-          <ListItemText className={styles.listHeaderText} primary={'date/price change'} />
+          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/price change'} />
         </ListItem>
       </List>
     </AppBar>,
@@ -107,7 +111,7 @@ export default ({ authorize, match }) => {
     <AppBar key="percentChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
-          <ListItemText className={styles.listHeaderText} primary={'date/percent change'} />
+          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/percent change'} />
         </ListItem>
       </List>
     </AppBar>,

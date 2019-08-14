@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import { useSubscribe, usePublish } from '../api'
-import { Link } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
@@ -13,7 +13,7 @@ import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import Divider from '@material-ui/core/Divider'
+import Table from '../table'
 import PostForm from './PostForm'
 
 const TabContainer = ({ children, dir, className }) => (<Typography component="div"
@@ -21,28 +21,6 @@ const TabContainer = ({ children, dir, className }) => (<Typography component="d
   dir={dir}>
   {children}
 </Typography>)
-
-const PostsList = ({ active, posts, styles }) =>
-  <List className={styles.list}
-    component="nav">
-    {(!posts || !active) && <LinearProgress />}
-    {(posts && posts.length === 0) && <Typography className={styles.empty} component="h2">
-      There are no posts yet.
-    </Typography>}
-    {(posts && posts.length !== 0) && posts.map((post) => [
-      <ListItem className={styles.listItem}
-        disableTouchRipple
-        {...{ to: '/dashboard/post/' + post.index }}
-        component={Link}
-        key={post.index + 'list'}
-        button>
-        <ListItemText className={styles.text}
-          primary={post.data.name} />
-      </ListItem>,
-      <Divider key={post.index + 'divider'} />
-    ]
-    )}
-  </List>
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -91,12 +69,15 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-const tabsContainerStyle = {
-  flex: '1 1 0%'
-}
+const mapPosts = (posts) => posts.map(post => ({
+  name: post.data.name,
+  created: moment.unix(post.created / 1000000000).format('DD/MM/YY'),
+  updated: post.updated ? moment.unix(post.updated / 1000000000).format('DD/MM/YY') : '',
+  index: post.index
+}))
+
 
 export default ({ authorize }) => {
-  const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
   // socket
   const [posts, socket] = useSubscribe('posts/*', authorize)
@@ -104,21 +85,25 @@ export default ({ authorize }) => {
   const active = socket && socket.readyState === WebSocket.OPEN
 
   const theme = useTheme()
-  const mobile = useMediaQuery(theme.breakpoints.down('sm'))
-  const styles = rootStyles({
-    active,
-    lights
-  })
+  const mobile = useMediaQuery(theme.breakpoints.down('xs'))
+  // const tablet = useMediaQuery(theme.breakpoints.between('s', 'md'))
+  // const laptop = useMediaQuery(theme.breakpoints.between('sm', 'md'))
+  const styles = rootStyles({ lights })
 
   // tabs
   const [tab, setTab] = useState(0)
-
   function changeTab(index) {
     setTab(index)
   }
 
+  // table
+  const hiddenFields = ['index']
+  const hiddenMobileFields = ['created', 'updated']
+
+  const postsMap = posts ? mapPosts(posts) : null
+
   return <Paper className={styles.root} elevation={0}>
-    {(() => role === 'admin' || role === 'root' ? (<div className={styles.root}>
+    <div className={styles.root}>
       <AppBar position="sticky" color="default">
         <Tabs
           value={tab}
@@ -138,23 +123,29 @@ export default ({ authorize }) => {
               <ListItemText className={styles.listHeaderText} primary={'Post details'} />)()}
           </ListItem>
         </List>
+        {(!posts || !active) && <LinearProgress />}
       </AppBar>
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={tab}
         onChangeIndex={changeTab}
-        containerStyle={tabsContainerStyle}
+        containerStyle={{
+          flex: '1 1 0%',
+          paddingBottom: tab === 0 ? 55 : 0
+        }}
         className={styles.tabRoot}
       >
         <TabContainer className={styles.tabContainerList} dir={theme.direction}>
-          <PostsList active={active} posts={posts} styles={styles} />
+          {postsMap && <Table rows={postsMap}
+            link={(row) => '/dashboard/post/' + row['index']}
+            pagination
+            hiddenFields={hiddenFields}
+            hiddenMobileFields={hiddenMobileFields} />}
         </TabContainer>
         <TabContainer className={styles.tabContainerForm} dir={theme.direction}>
           <PostForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    </div>) : (<div className={styles.postsList}>
-      <PostsList active={active} posts={posts} styles={styles} />
-    </div>))()}
+    </div>
   </Paper>
 }
