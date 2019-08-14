@@ -19,13 +19,14 @@ const rootStyles = makeStyles((theme) => ({
   root: {
     borderRadius: 0,
     overflow: 'auto',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
     flex: 1
   },
   list: {
     padding: 0
   },
   listHeader: {
-    background: theme.palette.primary.main,
+    background: (props) => props.lights ? '#ececec' : '#3e3e3e',
     justifyContent: 'space-between'
   },
   listHeaderText: {
@@ -33,14 +34,16 @@ const rootStyles = makeStyles((theme) => ({
   },
   searchInput: {
     marginBottom: 4,
-    marginTop: 4
+    marginTop: 4,
+    marginRight: 20
   },
   tablePagination: {
     position: 'fixed',
     bottom: 0,
-    right: 23,
+    right: 0,
     width: '100%',
-    background: 'black'
+    borderTop: '1px solid #b5b5b57a',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   },
   tableRoot: {
     marginBottom: 57
@@ -51,6 +54,10 @@ const rootStyles = makeStyles((theme) => ({
       background: '#efefef',
       cursor: 'pointer'
     }
+  },
+  tableCell: {
+    paddingTop: 20,
+    paddingBottom: 20
   }
 }))
 
@@ -132,12 +139,15 @@ export default withRouter(({ authorize, history }) => {
             label="Search"
             className={styles.searchInput}
             value={search}
+            margin="dense"
+            fullWidth
+            autofocus
             onChange={(e) => {
               setSearch(e.target.value)
               window.localStorage.setItem('storage:search', e.target.value)
             }}
             margin="normal"
-            variant="outlined"
+            variant="filled"
           />
           <TableSortLabel active
             direction={order}
@@ -156,7 +166,9 @@ export default withRouter(({ authorize, history }) => {
             className={styles.tableRow}
             hover
             onClick={() => history.push('/dashboard/storage/' + key.replace(/\//gi, ':'))}>
-            <TableCell key={key} component={'th'}
+            <TableCell key={key}
+              component={'th'}
+              className={styles.tableCell}
               scope={'row'}
               align={'left'}>{key}</TableCell>
           </TableRow>)}
