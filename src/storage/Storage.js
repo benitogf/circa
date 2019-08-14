@@ -7,14 +7,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Paper from '@material-ui/core/Paper'
 import AppBar from '@material-ui/core/AppBar'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableRow from '@material-ui/core/TableRow'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import Table from '../table'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -44,65 +38,8 @@ const rootStyles = makeStyles((theme) => ({
   },
   searchInputLabel: {
     transform: 'translate(14px, 14px) scale(1)',
-  },
-  tablePagination: {
-    position: 'fixed',
-    bottom: 0,
-    right: 0,
-    width: '100%',
-    borderTop: '1px solid #b5b5b57a',
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
-  },
-  paginationActions: {
-    margin: 0
-  },
-  paginationInput: {
-    [theme.breakpoints.down('xs')]: {
-      marginRight: 7
-    }
-  },
-  tableRoot: {
-    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
-  },
-  tableRow: {
-    textDecoration: 'none',
-    '&:hover': {
-      background: '#efefef',
-      cursor: 'pointer'
-    }
-  },
-  tableCell: {
-    paddingTop: 20,
-    paddingBottom: 20
-  },
-  sortButton: {
-    height: '2.88em'
   }
 }))
-
-function desc(a, b) {
-  if (b < a) {
-    return -1
-  }
-  if (b > a) {
-    return 1
-  }
-  return 0
-}
-
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index])
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0])
-    if (order !== 0) return order
-    return a[1] - b[1]
-  });
-  return stabilizedThis.map(el => el[0])
-}
-
-function getSorting(order) {
-  return order === 'desc' ? (a, b) => desc(a, b) : (a, b) => -desc(a, b)
-}
 
 function glob(pattern, input) {
   var re = new RegExp(pattern.replace(/([.?+^$[\]\\(){}|/-])/g, "\\$1").replace(/\*/g, '.*'))
@@ -134,20 +71,6 @@ export default withRouter(({ authorize, history }) => {
   // table
   const storedSearch = window.localStorage.getItem('storage:search')
   const [search, setSearch] = useState(!storedSearch ? '' : storedSearch)
-  const [order, setOrder] = useState('asc')
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(15)
-  function handleRequestSort(_event) {
-    const isDesc = order === 'desc'
-    setOrder(isDesc ? 'asc' : 'desc')
-  }
-  function handleChangePage(_event, newPage) {
-    setPage(newPage)
-  }
-  function handleChangeRowsPerPage(event) {
-    setRowsPerPage(+event.target.value)
-    setPage(0)
-  }
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
@@ -177,53 +100,13 @@ export default withRouter(({ authorize, history }) => {
             }}
             variant="outlined"
           />
-          <Button variant="contained"
-            color="primary"
-            onClick={handleRequestSort}
-            className={styles.sortButton}>
-            <TableSortLabel active
-              direction={order}
-            ></TableSortLabel>
-          </Button>
         </ListItem>
       </List>
       {!keys && (<LinearProgress />)}
     </AppBar>
-    {keys && <Table className={styles.tableRoot}>
-      <TableBody>
-        {stableSort(keys, getSorting(order))
-          .filter(key => glob(search, key))
-          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-          .map((key, index) => <TableRow key={index}
-            className={styles.tableRow}
-            hover
-            onClick={() => history.push('/dashboard/storage/' + key.replace(/\//gi, ':'))}>
-            <TableCell key={key}
-              component={'th'}
-              className={styles.tableCell}
-              scope={'row'}
-              align={'left'}>{key}</TableCell>
-          </TableRow>)}
-      </TableBody>
-    </Table>}
-    {keys && <TablePagination className={styles.tablePagination}
-      classes={{
-        actions: styles.paginationActions,
-        input: styles.paginationInput
-      }}
-      rowsPerPageOptions={[15, 40, 100]}
-      component="div"
-      count={keys.filter(key => glob(search, key)).length}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      backIconButtonProps={{
-        'aria-label': 'previous page',
-      }}
-      nextIconButtonProps={{
-        'aria-label': 'next page',
-      }}
-      onChangePage={handleChangePage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
-    />}
+    {keys && <Table top={67}
+      pagination
+      link={(row) => '/dashboard/storage/' + row['key'].replace(/\//gi, ':')}
+      rows={keys.filter(key => glob(search, key)).map(key => ({ key }))} />}
   </Paper>
 })

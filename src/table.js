@@ -128,7 +128,7 @@ export default withRouter(({
   return [<Table key="tableHead" className={styles.tableHeadRoot}>
     <TableHead className={styles.tableHead}>
       <TableRow>
-        {Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
+        {rows.length > 0 && Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
           <TableCell classes={{
             root: styles.tableCellRoot
           }}
@@ -159,7 +159,7 @@ export default withRouter(({
   <Table key="table" className={styles.table}>
     <TableHead className={styles.fakeTableHead}>
       <TableRow>
-        {Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
+        {rows.length > 0 && Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
           <TableCell classes={{
             root: styles.tableCellRoot
           }}
