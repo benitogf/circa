@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import { fetch } from '../api'
-import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Paper'
-import Divider from '@material-ui/core/Divider'
 import AppBar from '@material-ui/core/AppBar'
+import Table from '../table'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -25,14 +24,6 @@ const rootStyles = makeStyles((theme) => ({
   listHeaderText: {
     overflowWrap: 'break-word',
   },
-  listItem: {
-    display: 'grid',
-    padding: 0,
-  },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em',
-  }
 }))
 
 export default ({ authorize }) => {
@@ -65,22 +56,11 @@ export default ({ authorize }) => {
             <ListItemText className={styles.listHeaderText} primary={'Users'} />
           </ListItem>
         </List>
+        {!users && (<LinearProgress />)}
       </AppBar>
-      {(!users) ? (<LinearProgress />) : users.length !== 0 &&
-        <List className={styles.list} component="nav">
-          {users.map((user) => [
-            <ListItem className={styles.listItem}
-              key={user.account + 'list'}
-              {...{ to: '/dashboard/user/' + user.account }}
-              component={Link}
-              button>
-              <ListItemText className={styles.text}
-                primary={user.account + ' - ' + user.name + ' - ' + user.role} />
-            </ListItem>,
-            <Divider key={user.account + 'divider'} />
-          ]
-          )}
-        </List>}
+      {users && <Table rows={users}
+        pagination
+        link={(row) => '/dashboard/user/' + row['account']} />}
     </Paper>
   )
 }

@@ -125,10 +125,15 @@ export default withRouter(({
     setPage(0)
   }
 
+  const filteredRows = stableSort(rows, getSorting(order, orderBy))
+    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+
+  const filterKeys = Object.keys(rows[0]).filter(v => responsiveTableFields(v))
+
   return [<Table key="tableHead" className={styles.tableHeadRoot}>
     <TableHead className={styles.tableHead}>
       <TableRow>
-        {rows.length > 0 && Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
+        {filterKeys.map((v, i) =>
           <TableCell classes={{
             root: styles.tableCellRoot
           }}
@@ -137,56 +142,43 @@ export default withRouter(({
               direction={order}
               onClick={createSortHandler(v)}
             >{v}</TableSortLabel>
-          </TableCell> : null)}
+          </TableCell>)}
       </TableRow>
     </TableHead>
     <TableBody className={styles.tableRoot}>
-      {stableSort(rows, getSorting(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((row, index) => <TableRow key={index}
-          className={styles.fakeTableRow}>
-          {Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
-            <TableCell classes={{
-              root: styles.tableCellRoot
-            }}
-              key={v}
-              component={i === 0 ? 'th' : ''}
-              scope={i === 0 ? 'row' : ''}
-              align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell> : null)}
-        </TableRow>)}
+      {filteredRows.map((row, index) => <TableRow key={index}
+        className={styles.fakeTableRow}>
+        {filterKeys.map((v, i) =>
+          <TableCell key={v}
+            align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell>)}
+      </TableRow>)}
     </TableBody>
   </Table>,
   <Table key="table" className={styles.table}>
     <TableHead className={styles.fakeTableHead}>
       <TableRow>
-        {rows.length > 0 && Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
-          <TableCell classes={{
-            root: styles.tableCellRoot
-          }}
-            key={v} align={i > 0 ? 'right' : 'left'}>
+        {rows.length > 0 && filterKeys.map((v, i) =>
+          <TableCell key={v} align={i > 0 ? 'right' : 'left'}>
             <TableSortLabel active={orderBy === v}
-              direction={order}
               onClick={createSortHandler(v)}
             >{v}</TableSortLabel>
-          </TableCell> : null)}
+          </TableCell>)}
       </TableRow>
     </TableHead>
     <TableBody className={styles.tableRoot}>
-      {stableSort(rows, getSorting(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((row, index) => <TableRow key={index}
-          className={styles.tableRow}
-          hover
-          onClick={() => history.push(link(row))}>
-          {Object.keys(rows[0]).map((v, i) => responsiveTableFields(v) ?
-            <TableCell classes={{
-              root: styles.tableCellRoot
-            }}
-              key={v}
-              component={i === 0 ? 'th' : ''}
-              scope={i === 0 ? 'row' : ''}
-              align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell> : null)}
-        </TableRow>)}
+      {filteredRows.map((row, index) => <TableRow key={index}
+        className={styles.tableRow}
+        hover
+        onClick={() => history.push(link(row))}>
+        {filterKeys.map((v, i) =>
+          <TableCell classes={{
+            root: styles.tableCellRoot
+          }}
+            key={v}
+            component={i === 0 ? 'th' : ''}
+            scope={i === 0 ? 'row' : ''}
+            align={i > 0 ? 'right' : 'left'}>{row[v]}</TableCell>)}
+      </TableRow>)}
     </TableBody>
   </Table>,
   pagination && <TablePagination key="tablePagination" className={styles.tablePagination}

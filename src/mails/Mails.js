@@ -1,15 +1,14 @@
 import React from 'react'
 import { useSubscribe } from '../api'
-import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
-import Typography from '@material-ui/core/Typography'
+import moment from 'moment'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Paper from '@material-ui/core/Paper'
-import Divider from '@material-ui/core/Divider'
 import AppBar from '@material-ui/core/AppBar'
+import Table from '../table'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -24,51 +23,32 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeaderText: {
     overflowWrap: 'break-word'
-  },
-  listItem: {
-    display: 'grid',
-    padding: 0,
-  },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em'
   }
 }))
 
 export default ({ authorize }) => {
-  const [mails] = useSubscribe('mails/*', authorize)
+  const [mails, socket] = useSubscribe('mails/*', authorize)
+  const active = socket && socket.readyState === WebSocket.OPEN
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
 
-  return (
-    <Paper className={styles.root} elevation={0}>
-      <AppBar position="sticky" color="default">
-        <List className={styles.list} component="nav">
-          <ListItem className={styles.listHeader}>
-            <ListItemText className={styles.listHeaderText} primary={'Mails'} />
-          </ListItem>
-        </List>
-      </AppBar>
-      {(!mails) ? (<LinearProgress />) : (() => mails.length !== 0 ? (
-        <List className={styles.list} component="nav">
-          {mails.map((mail) => [
-            <ListItem className={styles.listItem}
-              {...{ to: '/dashboard/mail/' + mail.index }}
-              component={Link}
-              key={mail.index + 'list'}
-              button>
-              <ListItemText className={styles.text}
-                primary={mail.data.email + ':' + mail.data.phone + ':' + mail.data.message} />
-            </ListItem>,
-            <Divider key={mail.index + 'divider'} />
-          ]
-          )}
-        </List>
-      ) : (
-          <Typography className={styles.text} component="h2">
-            There are no mails yet.
-          </Typography>
-        ))()}
-    </Paper>
-  )
+  return <Paper className={styles.root} elevation={0}>
+    <AppBar position="sticky" color="default">
+      <List className={styles.list} component="nav">
+        <ListItem className={styles.listHeader}>
+          <ListItemText className={styles.listHeaderText} primary={'Mails'} />
+        </ListItem>
+      </List>
+      {(!mails || !active) && (<LinearProgress />)}
+    </AppBar>
+    {mails && <Table rows={mails.map(mail => ({
+      email: mail.data.email,
+      date: moment.unix(mail.created / 1000000000).format('DD/MM/YY'),
+      index: mail.index
+    }))}
+      pagination
+      hiddenFields={['index']}
+      link={(row) => '/dashboard/mail/' + row['index']}
+    />}
+  </Paper>
 }
