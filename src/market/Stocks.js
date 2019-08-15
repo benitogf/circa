@@ -27,11 +27,11 @@ const rootStyles = makeStyles((theme) => ({
     top: 111
   },
   sectionHeader: {
-    top: 115
+    top: 117
   },
   sectionHeaderContent: {
     textAlign: 'center',
-    height: 50,
+    height: 45,
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
   lineChart: {
@@ -47,7 +47,7 @@ const mapStocks = (stocks, country) => stocks.filter((s) =>
     name: stock.data.id.replace(':IND', '').replace('-', ''),
     fullName: stock.data.name,
     price: stock.data.price,
-    priceChange1Day: stock.data.priceChange1Day
+    change: stock.data.priceChange1Day
   }))
 
 export default ({ authorize, date, country }) => {
@@ -75,7 +75,7 @@ export default ({ authorize, date, country }) => {
   </AppBar>,
   <Table key="stocksTable"
     rows={stocksMap}
-    top={115}
+    top={117}
     link={(row) => '/dashboard/stock/' + row['name']}
     hiddenMobileFields={hiddenMobileFields} />,
   <AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
@@ -103,7 +103,7 @@ export default ({ authorize, date, country }) => {
     <XAxis dataKey="name" stroke={lights ? '#5ebd56' : '#bed294'} />
     <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
     <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
-    <Line type="monotone" dataKey="priceChange1Day" stroke="#03a9f4" />
+    <Line type="monotone" dataKey="change" stroke="#03a9f4" />
     <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />
   </LineChart>] : <AppBar key="loadingHeader" className={styles.loadingHeader} position="sticky" color="default">
       <LinearProgress />

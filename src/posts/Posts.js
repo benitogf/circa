@@ -31,12 +31,6 @@ const rootStyles = makeStyles((theme) => ({
     background: 'transparent',
     overflowY: 'auto',
   },
-  postsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: '1 1',
-    overflow: 'auto'
-  },
   tabRoot: {
     display: 'flex',
     flex: '1 1'
@@ -61,11 +55,8 @@ const rootStyles = makeStyles((theme) => ({
     overflowWrap: 'break-word'
   },
   empty: {
-    padding: '1em'
-  },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em'
+    padding: '1em',
+    fontSize: '0.8em'
   }
 }))
 
@@ -136,11 +127,12 @@ export default ({ authorize }) => {
         className={styles.tabRoot}
       >
         <TabContainer className={styles.tabContainerList} dir={theme.direction}>
-          {postsMap && <Table rows={postsMap}
+          {(postsMap && postsMap.length > 0) && <Table rows={postsMap}
             link={(row) => '/dashboard/post/' + row['index']}
             pagination
             hiddenFields={hiddenFields}
             hiddenMobileFields={hiddenMobileFields} />}
+          {(postsMap && postsMap.length === 0) && <Typography className={styles.empty} component="p">You have no posts yet</Typography>}
         </TabContainer>
         <TabContainer className={styles.tabContainerForm} dir={theme.direction}>
           <PostForm publish={publish} afterCreate={() => setTab(0)} />

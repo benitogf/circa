@@ -7,6 +7,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import Paper from '@material-ui/core/Paper'
 import AppBar from '@material-ui/core/AppBar'
+import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Table from '../table'
 
@@ -38,6 +39,11 @@ const rootStyles = makeStyles((theme) => ({
   },
   searchInputLabel: {
     transform: 'translate(14px, 14px) scale(1)',
+  },
+  empty: {
+    padding: '1em',
+    fontSize: '0.8em',
+    background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6'
   }
 }))
 
@@ -71,6 +77,7 @@ export default withRouter(({ authorize, history }) => {
   // table
   const storedSearch = window.localStorage.getItem('storage:search')
   const [search, setSearch] = useState(!storedSearch ? '' : storedSearch)
+  const filteredKeys = keys ? keys.filter(key => glob(search, key)) : null
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
@@ -104,9 +111,10 @@ export default withRouter(({ authorize, history }) => {
       </List>
       {!keys && (<LinearProgress />)}
     </AppBar>
-    {keys && <Table top={67}
+    {(filteredKeys && filteredKeys.length > 0) && <Table top={67}
       pagination
       link={(row) => '/dashboard/storage/' + row['key'].replace(/\//gi, ':')}
-      rows={keys.filter(key => glob(search, key)).map(key => ({ key }))} />}
+      rows={filteredKeys.map(key => ({ key }))} />}
+    {(filteredKeys && filteredKeys.length === 0) && <Typography className={styles.empty} component="p">...</Typography>}
   </Paper>
 })

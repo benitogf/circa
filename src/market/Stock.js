@@ -28,11 +28,11 @@ const rootStyles = makeStyles((theme) => ({
     fontSize: '0.9rem',
   },
   sectionHeader: {
-    top: 48
+    top: 55
   },
   sectionHeaderContent: {
     textAlign: 'center',
-    height: 50,
+    height: 45,
     background: props => props.lights ? '#e2e2e2' : '#000'
   },
   lineChart: {

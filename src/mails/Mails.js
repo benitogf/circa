@@ -1,7 +1,8 @@
 import React from 'react'
+import moment from 'moment'
 import { useSubscribe } from '../api'
 import { makeStyles } from '@material-ui/core/styles'
-import moment from 'moment'
+import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -23,6 +24,10 @@ const rootStyles = makeStyles((theme) => ({
   },
   listHeaderText: {
     overflowWrap: 'break-word'
+  },
+  empty: {
+    padding: '1em',
+    fontSize: '0.8em'
   }
 }))
 
@@ -41,7 +46,7 @@ export default ({ authorize }) => {
       </List>
       {(!mails || !active) && (<LinearProgress />)}
     </AppBar>
-    {mails && <Table rows={mails.map(mail => ({
+    {(mails && mails.length > 0) && <Table rows={mails.map(mail => ({
       email: mail.data.email,
       date: moment.unix(mail.created / 1000000000).format('DD/MM/YY'),
       index: mail.index
@@ -50,5 +55,6 @@ export default ({ authorize }) => {
       hiddenFields={['index']}
       link={(row) => '/dashboard/mail/' + row['index']}
     />}
+    {(mails && mails.length === 0) && <Typography className={styles.empty} component="p">The mail inbox is empty!</Typography>}
   </Paper>
 }
