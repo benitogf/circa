@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
+import moment from 'moment'
 import { useSubscribe, usePublish } from '../api'
-import { Link } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Typography from '@material-ui/core/Typography'
@@ -13,33 +13,12 @@ import Paper from '@material-ui/core/Paper'
 import SwipeableViews from 'react-swipeable-views'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import Divider from '@material-ui/core/Divider'
 import BoxForm from './BoxForm'
+import Table from '../table'
 
 const TabContainer = ({ children, dir }) => (<Typography component="div" dir={dir}>
   {children}
 </Typography>)
-
-const BoxesList = ({ boxes, styles }) =>
-  <List className={styles.list}
-    component="nav">
-    {(boxes && boxes.length === 0) && <Typography className={styles.empty} component="h2">
-      There are no boxes yet.
-    </Typography>}
-    {(boxes && boxes.length > 0) && boxes.map((box) => [
-      <ListItem className={styles.listItem}
-        disableTouchRipple
-        {...{ to: '/dashboard/box/' + box.index }}
-        component={Link}
-        key={box.index + 'list'}
-        button>
-        <ListItemText className={styles.text}
-          primary={box.data.name} />
-      </ListItem>,
-      <Divider key={box.index + 'divider'} />
-    ]
-    )}
-  </List>
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -69,17 +48,10 @@ const rootStyles = makeStyles((theme) => ({
     padding: 0,
   },
   empty: {
-    padding: '1em'
-  },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em'
+    padding: '1em',
+    fontSize: '0.8em'
   }
 }))
-
-const tabsContainerStyle = {
-  flex: '1 1 0%'
-}
 
 export default ({ authorize }) => {
   const role = window.localStorage.getItem('role')
@@ -99,6 +71,13 @@ export default ({ authorize }) => {
   function changeTab(index) {
     setTab(index)
   }
+
+  const boxesMap = boxes ? boxes.map(box => ({
+    name: box.data.name,
+    created: moment.unix(box.created / 1000000000).format('DD/MM/YY'),
+    updated: box.updated ? moment.unix(box.updated / 1000000000).format('DD/MM/YY') : '',
+    index: box.index
+  })) : null
 
   return <Paper className={styles.root} elevation={0}>
     {(() => role === 'admin' || role === 'root' ? [
@@ -127,16 +106,30 @@ export default ({ authorize }) => {
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={tab}
         onChangeIndex={changeTab}
-        containerStyle={tabsContainerStyle}
+        containerStyle={{
+          flex: '1 1 0%',
+          paddingBottom: tab === 0 ? 55 : 0
+        }}
         className={styles.tabRoot}
       >
         <TabContainer dir={theme.direction}>
-          <BoxesList boxes={boxes} styles={styles} />
+          {(boxesMap && boxesMap.length > 0) && <Table rows={boxesMap}
+            pagination
+            hiddenMobileFields={['created', 'updated']}
+            hiddenFields={['index']}
+            link={(row) => '/dashboard/box/' + row['index']} />}
+          {(boxesMap && boxesMap.length === 0) && <Typography className={styles.empty} component="p">There are no boxes yet</Typography>}
         </TabContainer>
         <TabContainer dir={theme.direction}>
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    ] : <BoxesList boxes={boxes} styles={styles} />)()}
+    ] : [boxesMap && <Table key="boxesTable" rows={boxesMap}
+      pagination
+      hiddenMobileFields={['created', 'updated']}
+      hiddenFields={['index']}
+      link={(row) => '/dashboard/box/' + row['index']} />,
+    (boxesMap && boxesMap.length === 0) && <Typography key="boxesEmpty" className={styles.empty} component="p">There are no boxes yet</Typography>
+      ])()}
   </Paper>
 }

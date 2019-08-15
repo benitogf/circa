@@ -58,19 +58,11 @@ const rootStyles = makeStyles((theme) => ({
     margin: props => props.canEdit ? '0 auto' : '',
     maxWidth: props => props.canEdit ? 445 : 'unset'
   },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em'
-  },
   formTab: {
     position: 'absolute',
     width: "100%"
   }
 }))
-
-const tabsContainerStyle = {
-  flex: '1 1 0%'
-}
 
 export default ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
@@ -125,7 +117,10 @@ export default ({ match, authorize }) => {
       axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
       index={tab}
       onChangeIndex={changeTab}
-      containerStyle={tabsContainerStyle}
+      containerStyle={{
+        flex: '1 1 0%',
+        paddingBottom: tab === 0 ? 55 : 0
+      }}
       className={styles.tabRoot}
     >
       <TabContainer dir={theme.direction}>

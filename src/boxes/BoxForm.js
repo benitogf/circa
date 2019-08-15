@@ -20,6 +20,8 @@ const rootStyles = makeStyles((theme) => ({
     flex: '1 1',
     background: (props) => props.lights ? '#fffffff0' : '#1f1f1fd6',
     paddingBottom: 23,
+    position: (props) => props.afterCreate ? 'absolute' : 'inherit',
+    width: '100%',
   },
   warningContainer: {
     margin: '0 auto',
@@ -100,7 +102,7 @@ export default ({ publish, box, afterCreate, authorize }) => {
   const [loading, setLoading] = useState(false)
   const [confirm, setConfirm] = useState(false)
   const [updated, setUpdated] = useState(-1)
-  const styles = rootStyles({ lights })
+  const styles = rootStyles({ lights, afterCreate })
 
   const fields = {
     name: {

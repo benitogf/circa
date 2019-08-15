@@ -60,6 +60,7 @@ export default ({ authorize }) => {
       </AppBar>
       {users && <Table rows={users}
         pagination
+        hiddenMobileFields={['phone', 'name', 'email']}
         link={(row) => '/dashboard/user/' + row['account']} />}
     </Paper>
   )
