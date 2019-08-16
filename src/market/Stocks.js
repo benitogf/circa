@@ -27,7 +27,7 @@ const rootStyles = makeStyles((theme) => ({
     top: 111
   },
   sectionHeader: {
-    top: 117
+    top: 115
   },
   sectionHeaderContent: {
     textAlign: 'center',
