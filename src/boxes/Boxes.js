@@ -124,7 +124,8 @@ export default ({ authorize }) => {
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    ] : [boxesMap && <Table key="boxesTable" rows={boxesMap}
+    ] : [boxesMap && <Table key="boxesTable"
+      rows={boxesMap}
       pagination
       hiddenMobileFields={['created', 'updated']}
       hiddenFields={['index']}

@@ -62,7 +62,9 @@ export default ({ match, authorize }) => {
     <AppBar position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => active && post && post.data ? <ListItemText className={styles.listHeaderText} primary={post.data.name} /> : <CircularProgress color="inherit" size={24} />)()}
+          {(() => post && post.data ?
+            <ListItemText className={styles.listHeaderText} primary={post.data.name} /> :
+            <CircularProgress color="inherit" size={24} />)()}
         </ListItem>
       </List>
     </AppBar>

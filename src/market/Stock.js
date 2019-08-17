@@ -73,7 +73,7 @@ export default ({ authorize, match }) => {
       <List className={styles.list}
         component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => active && stock && stock.length ?
+          {(() => stock && stock.length ?
             <ListItemText primary={stock[0].data.country + ' - ' + stock[0].data.name} /> :
             <CircularProgress color="inherit" size={24} />)()}
         </ListItem>

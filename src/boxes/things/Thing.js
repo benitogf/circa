@@ -34,10 +34,6 @@ const rootStyles = makeStyles((theme) => ({
     margin: '0 auto',
     maxWidth: 445
   },
-  text: {
-    overflowWrap: 'break-word',
-    padding: '1em'
-  }
 }))
 
 export default ({ match, authorize }) => {
@@ -57,7 +53,9 @@ export default ({ match, authorize }) => {
     <List className={styles.list}
       component="nav">
       <ListItem className={styles.listHeader}>
-        {(() => thing && thing.data ? <ListItemText className={styles.listHeaderText} primary={thing.data.name} /> : <CircularProgress color="inherit" size={24} className={styles.formProgress} />)()}
+        {(() => thing && thing.data ?
+          <ListItemText className={styles.listHeaderText} primary={thing.data.name} /> :
+          <CircularProgress color="inherit" size={24} className={styles.formProgress} />)()}
       </ListItem>
       {(!thing || !active) && <LinearProgress />}
       {thing && thing.created && <ListItem className={styles.listDate}>

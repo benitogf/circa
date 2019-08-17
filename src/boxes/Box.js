@@ -138,7 +138,10 @@ export default ({ match, authorize }) => {
       </TabContainer>
       <TabContainer dir={theme.direction}>
         <div className={styles.formTab}>
-          {box && <ThingForm boxId={box.index} publish={publishThing} afterCreate={() => setTab(0)} authorize={authorize} />}
+          {box && <ThingForm boxId={box.index}
+            publish={publishThing}
+            afterCreate={() => setTab(0)}
+            authorize={authorize} />}
         </div>
       </TabContainer>
     </SwipeableViews>

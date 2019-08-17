@@ -21,12 +21,14 @@ export default ({ match, authorize }) => {
   const styles = rootStyles({ active, lights })
 
   return [(!things || !active) && (<LinearProgress key="loadingThings" />),
-  (things && things.length > 0) && <Table key="thingsTable" rows={things.map(thing => ({
-    name: thing.data.name,
-    created: thing.created,
-    updated: thing.updated,
-    index: thing.index
-  }))} pagination
+  (things && things.length > 0) && <Table key="thingsTable"
+    pagination
+    rows={things.map(thing => ({
+      name: thing.data.name,
+      created: thing.created,
+      updated: thing.updated,
+      index: thing.index
+    }))}
     hiddenMobileFields={['created', 'updated']}
     link={(row) => '/dashboard/box/' + match.params.id + '/thing/' + row.index}
     hiddenFields={['index']} />,
