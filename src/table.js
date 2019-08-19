@@ -24,8 +24,8 @@ const rootStyles = makeStyles((theme) => ({
   tableRow: {
     textDecoration: 'none',
     '&:hover': {
-      background: '#efefef',
-      cursor: 'pointer'
+      background: (props) => props.link ? 'pointer' : '',
+      cursor: (props) => props.link ? 'pointer' : ''
     }
   },
   tableCell: {
@@ -92,10 +92,10 @@ export default withRouter(({
   pagination = false,
   hiddenFields = [],
   hiddenMobileFields = [],
-  link,
+  link = null,
   history }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
-  const styles = rootStyles({ lights, top })
+  const styles = rootStyles({ lights, top, link })
   const theme = useTheme()
   const mobile = useMediaQuery(theme.breakpoints.down('xs'))
   const tablet = useMediaQuery(theme.breakpoints.between('s', 'sm'))
@@ -168,8 +168,8 @@ export default withRouter(({
     <TableBody className={styles.tableRoot}>
       {filteredRows.map((row, index) => <TableRow key={index}
         className={styles.tableRow}
-        hover
-        onClick={() => history.push(link(row))}>
+        hover={link !== null}
+        onClick={() => link ? history.push(link(row)) : null}>
         {filterKeys.map((v, i) =>
           <TableCell classes={{
             root: styles.tableCellRoot

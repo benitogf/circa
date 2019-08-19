@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
+import Table from '../table'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -44,12 +45,11 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 const mapStock = (stocks) => stocks.map((stock) => ({
-  name: stock.data.id.replace(':IND', '').replace('-', ''),
-  fullName: stock.data.name,
+  // name: stock.data.id.replace(':IND', '').replace('-', ''),
+  // fullName: stock.data.name,
   price: stock.data.price,
-  priceDate: stock.data.priceDate,
-  priceChange1Day: stock.data.priceChange1Day,
-  percentChange1Day: stock.data.percentChange1Day
+  date: stock.data.priceDate,
+  change: stock.data.priceChange1Day
 }))
 
 export default ({ authorize, match }) => {
@@ -80,7 +80,11 @@ export default ({ authorize, match }) => {
       </List>
       {(!stock || !active) && <LinearProgress />}
     </AppBar>
-    {stockMap && [<AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
+    {stockMap && [<Table key="stockTable"
+      rows={stockMap}
+      top={57}
+      hiddenMobileFields={['change']} />,
+    <AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
           <ListItemText disableTypography className={styles.listHeaderText} primary={'date/price'} />
@@ -88,7 +92,7 @@ export default ({ authorize, match }) => {
       </List>
     </AppBar>,
     <LineChart key="priceChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stockMap}>
-      <XAxis dataKey="priceDate" stroke={lights ? '#5ebd56' : '#bed294'} />
+      <XAxis dataKey="date" stroke={lights ? '#5ebd56' : '#bed294'} />
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
       <Line type="monotone" dataKey="price" stroke="#03a9f4" />
@@ -101,25 +105,11 @@ export default ({ authorize, match }) => {
         </ListItem>
       </List>
     </AppBar>,
-    <LineChart key="priceChange1DayChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stockMap}>
-      <XAxis dataKey="priceDate" stroke={lights ? '#5ebd56' : '#bed294'} />
+    <LineChart key="priceChangeChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stockMap}>
+      <XAxis dataKey="date" stroke={lights ? '#5ebd56' : '#bed294'} />
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
-      <Line type="monotone" dataKey="priceChange1Day" stroke="#03a9f4" />
-      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
-    </LineChart>,
-    <AppBar key="percentChartHeader" className={styles.sectionHeader} position="sticky" color="default">
-      <List className={styles.list} component="nav">
-        <ListItem className={styles.sectionHeaderContent}>
-          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/percent change'} />
-        </ListItem>
-      </List>
-    </AppBar>,
-    <LineChart key="percentChart" className={styles.lineChart} width={chartWidth} height={chartHeight} data={stockMap}>
-      <XAxis dataKey="priceDate" stroke={lights ? '#5ebd56' : '#bed294'} />
-      <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
-      <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
-      <Line type="monotone" dataKey="percentChange1Day" stroke="#03a9f4" />
+      <Line type="monotone" dataKey="change" stroke="#03a9f4" />
       <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
     </LineChart>
     ]}
