@@ -93,6 +93,7 @@ export default withRouter(({
   hiddenFields = [],
   hiddenMobileFields = [],
   link = null,
+  sortDefault = 'name',
   history }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights, top, link })
@@ -106,7 +107,7 @@ export default withRouter(({
     ((!mobile && !tablet) ||
       ((mobile || tablet) && hiddenMobileFields.indexOf(field) === -1))
   const [order, setOrder] = useState('asc')
-  const [orderBy, setOrderBy] = useState('name')
+  const [orderBy, setOrderBy] = useState(sortDefault)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(15)
   function handleRequestSort(_event, property) {

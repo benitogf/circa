@@ -81,7 +81,7 @@ export default ({ authorize, date, country }) => {
   <AppBar key="priceChartHeader" className={styles.sectionHeader} position="sticky" color="default">
     <List className={styles.list} component="nav">
       <ListItem className={styles.sectionHeaderContent}>
-        <ListItemText disableTypography className={styles.listHeaderText} primary={'price/index'} />
+        <ListItemText disableTypography className={styles.listHeaderText} primary={'index/price'} />
       </ListItem>
     </List>
   </AppBar>,
@@ -95,7 +95,7 @@ export default ({ authorize, date, country }) => {
   <AppBar key="priceChangeChartHeader" className={styles.sectionHeader} position="sticky" color="default">
     <List className={styles.list} component="nav">
       <ListItem className={styles.sectionHeaderContent}>
-        <ListItemText disableTypography className={styles.listHeaderText} primary={'price change/index'} />
+        <ListItemText disableTypography className={styles.listHeaderText} primary={'index/change'} />
       </ListItem>
     </List>
   </AppBar>,

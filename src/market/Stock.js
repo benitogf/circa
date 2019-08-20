@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import { useSubscribe } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -45,12 +46,10 @@ const rootStyles = makeStyles((theme) => ({
 }))
 
 const mapStock = (stocks) => stocks.map((stock) => ({
-  // name: stock.data.id.replace(':IND', '').replace('-', ''),
-  // fullName: stock.data.name,
   price: stock.data.price,
+  change: stock.data.priceChange1Day,
   date: stock.data.priceDate,
-  change: stock.data.priceChange1Day
-}))
+})).sort((a, b) => moment(a.date).unix() - moment(b.date).unix())
 
 export default ({ authorize, match }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -101,7 +100,7 @@ export default ({ authorize, match }) => {
     <AppBar key="priceChangeChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.sectionHeaderContent}>
-          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/price change'} />
+          <ListItemText disableTypography className={styles.listHeaderText} primary={'date/change'} />
         </ListItem>
       </List>
     </AppBar>,
