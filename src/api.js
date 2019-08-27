@@ -2,7 +2,7 @@ import { useReducer, useEffect } from 'react'
 import { domain, ssl } from './config'
 import { Base64 } from 'js-base64'
 import ky from 'ky'
-import Samo from 'samo-js-client'
+import Katamari from 'katamari-client'
 import tus from 'tus-js-client'
 
 const protocol = ssl ? 'https://' : 'http://'
@@ -174,7 +174,7 @@ export const subscribe = (url, socket, authorize, dispatch) => () => {
     // console.log('mount', url)
     dispatch({
       type: 'open',
-      data: Samo(
+      data: Katamari(
         domain + (url ? '/' + url : ''),
         ssl,
         ['bearer', token]

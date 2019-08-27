@@ -8,7 +8,7 @@ PWA, TWA, JWT sample application
 - https://reactjs.org/docs/hooks-state.html
 - https://wicg.github.io/page-lifecycle
 - https://github.com/tus/tus-js-client
-- https://github.com/benitogf/samo-js-client
+- https://github.com/benitogf/katamri-client
 
 ### apk twa
 
