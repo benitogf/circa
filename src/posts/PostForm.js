@@ -65,6 +65,16 @@ const rootStyles = makeStyles((theme) => ({
     marginTop: 6,
     background: theme.palette.error.main
   },
+  formPublish: {
+    marginTop: 6,
+    marginRight: 6,
+    background: '#83e663'
+  },
+  formUnpublish: {
+    marginTop: 6,
+    marginRight: 6,
+    background: '#f3dd8c'
+  },
   formButtonWrapper: {
     display: 'flex',
     position: 'sticky',
@@ -156,7 +166,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
     }
   }
 
-  const send = async () => {
+  const send = async (active) => {
     setSubmitted(true)
     if (!validation.error) {
       try {
@@ -164,6 +174,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
         const ops = await Promise.all(content.ops.map(uploadImages))
         await publish({
           name: name.trim(),
+          active,
           content: {
             ops
           }
@@ -254,8 +265,24 @@ export default ({ publish, post, afterCreate, authorize }) => {
           type="submit"
           color="primary"
           disabled={loading}
-          onClick={send}>
+          onClick={() => send(false)}>
           Create
+        </Button>}
+        {(!afterCreate && !post.data.active) && <Button className={styles.formPublish}
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading}
+          onClick={() => send(true)}>
+          Publish
+        </Button>}
+        {(!afterCreate && post.data.active) && <Button className={styles.formUnpublish}
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading}
+          onClick={() => send(false)}>
+          Unpublish
         </Button>}
         {!afterCreate && <Button className={styles.formDelete}
           variant="contained"
@@ -270,7 +297,7 @@ export default ({ publish, post, afterCreate, authorize }) => {
           type="submit"
           color="primary"
           disabled={loading}
-          onClick={send}>
+          onClick={() => send(post.data.active)}>
           Update
         </Button>}
         {loading && <CircularProgress size={24} className={styles.formProgress} />}

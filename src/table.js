@@ -93,7 +93,7 @@ export default withRouter(({
   hiddenFields = [],
   hiddenMobileFields = [],
   link = null,
-  sortDefault = 'name',
+  sortDefault = '',
   history }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights, top, link })

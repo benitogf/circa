@@ -5,23 +5,25 @@ import { ImageDrop } from './formats/image-drop'
 import { ImageResize } from './formats/image-resize'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
-export default ({ value, onChange, disabled, onFocus, onBlur, editing }) => {
+const noop = () => { }
+
+export default ({ value, onChange = noop, disabled, onFocus = noop, onBlur = noop, editing = false, readOnly = false }) => {
   const [editor, setEditor] = useState(null)
   const editorRoot = useCallback(current => {
     if (current && !editor) {
-      if (!Quill.imports['modules/imageDrop']) {
+      if (!readOnly && !Quill.imports['modules/imageDrop']) {
         Quill.register({
           'modules/imageDrop': ImageDrop
         })
       }
 
-      if (!Quill.imports['modules/imageResize']) {
+      if (!readOnly && !Quill.imports['modules/imageResize']) {
         Quill.register({
           'modules/imageResize': ImageResize
         })
       }
       const quill = new Quill(current, {
-        modules: {
+        modules: !readOnly ? {
           imageDrop: true,
           imageResize: {
             modules: ['Resize', 'DisplaySize']
@@ -32,8 +34,10 @@ export default ({ value, onChange, disabled, onFocus, onBlur, editing }) => {
               ['bold', 'italic', 'underline'],
               ['image']
             ]
-          }
-        },
+          },
+        } : {
+            toolbar: null
+          },
         theme: 'snow'
       })
       try {
@@ -48,7 +52,7 @@ export default ({ value, onChange, disabled, onFocus, onBlur, editing }) => {
       quill.on('text-change', () => onChange(quill.getContents()))
       setEditor(quill)
     }
-  }, [onBlur, onFocus, onChange, value, editor])
+  }, [onBlur, onFocus, onChange, value, editor, readOnly])
 
   if (editor) {
     editor.enable(!disabled)

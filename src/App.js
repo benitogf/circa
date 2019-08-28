@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import { useAuthorize } from './api'
 
 import Home from './home/Home'
+import Blog from './home/Blog'
 import Login from './auth/Login'
 import Signup from './auth/Signup'
 import Dashboard from './dashboard/Dashboard'
@@ -103,6 +104,8 @@ export default () => {
     <Switch>
       <Route exact path="/" render={(props) =>
         <Home {...props} status={status} />} />
+      <Route exact path="/blog" render={(props) =>
+        <Blog {...props} status={status} />} />
       <Route exact path="/logout" render={() => {
         window.localStorage.setItem('account', '')
         window.localStorage.setItem('token', '')

@@ -177,7 +177,7 @@ export const subscribe = (url, socket, authorize, dispatch) => () => {
       data: Katamari(
         domain + (url ? '/' + url : ''),
         ssl,
-        ['bearer', token]
+        token ? ['bearer', token] : []
       )
     })
   } else {

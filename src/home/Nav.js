@@ -29,7 +29,12 @@ const navStyles = makeStyles(theme => ({
     textDecoration: 'none',
   },
   signUp: {
-    marginRight: props => props.location.pathname !== '/login' ? '6px' : '0',
+    marginRight: props => props.location.pathname !== '/login' ? 6 : 0,
+    textTransform: 'unset'
+  },
+  blog: {
+    marginRight: 6,
+    background: '#ff7800',
     textTransform: 'unset'
   },
   logIn: {
@@ -64,7 +69,13 @@ export default withRouter(({ location }) => {
         container
         spacing={4}>
         <Grid item>
-          {location.pathname !== '/signup' && (<Button variant="contained"
+          {location.pathname === '/' && (<Button variant="contained"
+            className={styles.blog}
+            component={Link}
+            {...{ to: '/blog' }}>
+            Blog
+            </Button>)}
+          {location.pathname === '/login' && (<Button variant="contained"
             className={styles.signUp}
             component={Link}
             {...{ to: '/signup' }} color="secondary">
