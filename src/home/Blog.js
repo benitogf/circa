@@ -13,7 +13,7 @@ const rootStyles = makeStyles((theme) => ({
     flex: '1 1',
     background: 'transparent',
     overflowY: 'auto',
-    marginTop: 88
+    marginTop: props => props.status === 'authorized' ? 0 : 88
   },
   container: {
     margin: props => props.active ? '0 auto' : '',
@@ -33,12 +33,12 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default () => {
+export default ({ status }) => {
   const [posts, socket] = useSubscribe('blog')
   const active = socket && socket.readyState === WebSocket.OPEN
-  const styles = rootStyles({ active: posts && active })
+  const styles = rootStyles({ active: posts && active, status })
 
-  console.log(posts, socket)
+  console.log(status)
 
   return <Paper className={styles.root} elevation={0}>
     <Paper className={styles.container} elevation={0}>

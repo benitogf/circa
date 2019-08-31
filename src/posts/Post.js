@@ -11,6 +11,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import AppBar from '@material-ui/core/AppBar'
+import Icon from '@material-ui/core/Icon'
 import PostForm from './PostForm'
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
@@ -41,6 +42,13 @@ const rootStyles = makeStyles((theme) => ({
   text: {
     overflowWrap: 'break-word',
     padding: '1em'
+  },
+  blogPreviewLink: {
+    position: 'absolute',
+    right: 16,
+    top: 12,
+    textDecoration: 'none',
+    color: 'inherit'
   }
 }))
 
@@ -65,6 +73,7 @@ export default ({ match, authorize }) => {
           {(() => post && post.data ?
             <ListItemText className={styles.listHeaderText} primary={post.data.name} /> :
             <CircularProgress color="inherit" size={24} />)()}
+          <a className={styles.blogPreviewLink} title="blog preview" href="/blog" target="_blank"><Icon>art_track</Icon></a>
         </ListItem>
       </List>
     </AppBar>

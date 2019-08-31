@@ -38,7 +38,7 @@ export default ({ value, onChange = noop, disabled, onFocus = noop, onBlur = noo
         } : {
             toolbar: null
           },
-        theme: 'snow'
+        theme: !readOnly ? 'snow' : null
       })
       try {
         quill.setContents(value)

@@ -13,6 +13,7 @@ import SwipeableViews from 'react-swipeable-views'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
+import Icon from '@material-ui/core/Icon'
 import Table from '../table'
 import PostForm from './PostForm'
 
@@ -57,6 +58,13 @@ const rootStyles = makeStyles((theme) => ({
   empty: {
     padding: '1em',
     fontSize: '0.8em'
+  },
+  blogPreviewLink: {
+    position: 'absolute',
+    right: 16,
+    top: 12,
+    textDecoration: 'none',
+    color: 'inherit'
   }
 }))
 
@@ -112,6 +120,7 @@ export default ({ authorize }) => {
             {(() => tab === 0 ?
               <ListItemText className={styles.listHeaderText} primary={'Available posts'} /> :
               <ListItemText className={styles.listHeaderText} primary={'Post details'} />)()}
+            <a className={styles.blogPreviewLink} title="blog preview" href="/blog" target="_blank"><Icon>art_track</Icon></a>
           </ListItem>
         </List>
         {(!posts || !active) && <LinearProgress />}
