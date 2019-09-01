@@ -16,8 +16,10 @@ const rootStyles = makeStyles((theme) => ({
     marginTop: props => props.status === 'authorized' ? 0 : 88
   },
   container: {
-    margin: props => props.active ? '0 auto' : '',
-    maxWidth: props => props.active ? 960 : 'unset',
+    [theme.breakpoints.up('sm')]: {
+      margin: '0 auto',
+    },
+    maxWidth: 960,
     borderRadius: 0,
     background: 'transparent',
   },
@@ -28,7 +30,7 @@ const rootStyles = makeStyles((theme) => ({
   },
   empty: {
     padding: 15,
-    background: 'white',
+    background: theme.palette.background.paper,
     borderRadius: 5
   }
 }))
@@ -36,15 +38,13 @@ const rootStyles = makeStyles((theme) => ({
 export default ({ status }) => {
   const [posts, socket] = useSubscribe('blog')
   const active = socket && socket.readyState === WebSocket.OPEN
-  const styles = rootStyles({ active: posts && active, status })
-
-  console.log(status)
+  const styles = rootStyles({ status })
 
   return <Paper className={styles.root} elevation={0}>
+    {(!posts || !active) && <LinearProgress />}
     <Paper className={styles.container} elevation={0}>
-      {(!posts || !active) && <LinearProgress />}
       {(posts && posts.length === 0) && <p className={styles.empty}>There's no content available yet</p>}
-      {posts && posts.map((post, index) => {
+      {(posts && posts.length !== 0) && posts.map((post, index) => {
         return <Paper key={index} elevation={0}>
           <h4 className={styles.postTitle}>{post.data.name}</h4>
           <Quill
