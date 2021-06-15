@@ -84,7 +84,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ boxId, publish, thing, afterCreate, authorize }) => {
+const ThingForm = ({ boxId, publish, thing, afterCreate, authorize }) => {
   const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
   // fields
@@ -264,3 +264,5 @@ export default ({ boxId, publish, thing, afterCreate, authorize }) => {
     </form>
   </div>)
 }
+
+export default ThingForm

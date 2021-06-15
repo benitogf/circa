@@ -3,7 +3,7 @@ import { domain, ssl } from './config'
 import { Base64 } from 'js-base64'
 import ky from 'ky'
 import Katamari from 'katamari-client'
-import tus from 'tus-js-client'
+import * as tus from 'tus-js-client'
 
 const protocol = ssl ? 'https://' : 'http://'
 const prefixUrl = protocol + domain
@@ -166,74 +166,6 @@ const subscribeReducer = (state, action) => {
   }
 }
 
-export const subscribe = (url, socket, authorize, dispatch) => () => {
-  // https://github.com/facebook/react/issues/14326#issuecomment-472043812
-  let unmounted = false
-  const token = window.localStorage.getItem('token')
-  if (!socket) {
-    // console.log('mount', url)
-    dispatch({
-      type: 'open',
-      data: Katamari(
-        domain + (url ? '/' + url : ''),
-        ssl,
-        token ? ['bearer', token] : []
-      )
-    })
-  } else {
-    socket.onopen = () => {
-      if (!unmounted) {
-        dispatch({ type: 'open', data: socket })
-      }
-    }
-    socket.onerror = async (e) => {
-      console.warn(url, e)
-      // there's no propagation of the response
-      // so close, refresh token and remount is done
-      // to any error
-      socket.close()
-      if (!unmounted) {
-        if (!socket.frozen) {
-          try {
-            await authorize()
-          } catch (e) {
-            console.warn(e)
-          }
-          if (!unmounted) {
-            dispatch({ type: 'close' })
-          }
-        }
-      }
-    }
-    socket.onmessage = (data) => {
-      if (!unmounted) {
-        dispatch({
-          type: 'data',
-          data
-        })
-      }
-    }
-    socket.onfrozen = () => {
-      if (!unmounted) {
-        dispatch({ type: 'freeze' })
-      }
-    }
-    socket.onresume = () => {
-      if (!unmounted) {
-        dispatch({ type: 'resume' })
-      }
-    }
-  }
-
-  return () => {
-    unmounted = true
-    if (socket) {
-      // console.log('unmount', url)
-      socket.close()
-    }
-  }
-}
-
 export const useSubscribe = (url, authorize) => {
   const [state, dispatch] = useReducer(subscribeReducer, {
     socket: null,
@@ -246,7 +178,75 @@ export const useSubscribe = (url, authorize) => {
       dispatch({ type: 'close' })
     }
   }
-  useEffect(subscribe(url, state.socket, authorize, dispatch), [state.socket])
+  // useEffect(subscribe(url, state.socket, authorize, dispatch), [state.socket])
+  useEffect(() => {
+    // https://github.com/facebook/react/issues/14326#issuecomment-472043812
+    let unmounted = false
+    const token = window.localStorage.getItem('token')
+    const socket = state.socket
+    if (!socket) {
+      // console.log('mount', url)
+      dispatch({
+        type: 'open',
+        data: Katamari(
+          domain + (url ? '/' + url : ''),
+          ssl,
+          token ? ['bearer', token] : []
+        )
+      })
+    } else {
+      socket.onopen = () => {
+        if (!unmounted) {
+          dispatch({ type: 'open', data: socket })
+        }
+      }
+      socket.onerror = async (e) => {
+        console.warn(url, e)
+        // there's no propagation of the response
+        // so close, refresh token and remount is done
+        // to any error
+        socket.close()
+        if (!unmounted) {
+          if (!socket.frozen) {
+            try {
+              await authorize()
+            } catch (e) {
+              console.warn(e)
+            }
+            if (!unmounted) {
+              dispatch({ type: 'close' })
+            }
+          }
+        }
+      }
+      socket.onmessage = (data) => {
+        if (!unmounted) {
+          dispatch({
+            type: 'data',
+            data
+          })
+        }
+      }
+      socket.onfrozen = () => {
+        if (!unmounted) {
+          dispatch({ type: 'freeze' })
+        }
+      }
+      socket.onresume = () => {
+        if (!unmounted) {
+          dispatch({ type: 'resume' })
+        }
+      }
+    }
+  
+    return () => {
+      unmounted = true
+      if (socket) {
+        // console.log('unmount', url)
+        socket.close()
+      }
+    }
+  }, [state.socket, authorize, url])
   return [state.data, state.socket]
 }
 

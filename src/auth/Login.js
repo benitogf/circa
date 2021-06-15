@@ -57,7 +57,7 @@ const loginStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ status, authorize }) => {
+const Login = ({ status, authorize }) => {
   const styles = loginStyles()
 
   const [account, setAccount] = useState('')
@@ -177,3 +177,5 @@ export default ({ status, authorize }) => {
     </Grid>
   </Grid>)
 }
+
+export default Login

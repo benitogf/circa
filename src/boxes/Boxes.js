@@ -53,7 +53,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ authorize }) => {
+const Boxes = ({ authorize }) => {
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
   // socket
@@ -134,3 +134,5 @@ export default ({ authorize }) => {
       ])()}
   </Paper>
 }
+
+export default Boxes

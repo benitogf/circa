@@ -51,7 +51,7 @@ const mapStock = (stocks) => stocks.map((stock) => ({
   date: stock.data.priceDate,
 })).sort((a, b) => moment(a.date).unix() - moment(b.date).unix())
 
-export default ({ authorize, match }) => {
+const Stock = ({ authorize, match }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [stock, socket] = useSubscribe('stocks/' + match.params.id + '/*', authorize)
@@ -95,7 +95,7 @@ export default ({ authorize, match }) => {
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
       <Line type="monotone" dataKey="price" stroke="#03a9f4" />
-      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
+      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />
     </LineChart>,
     <AppBar key="priceChangeChartHeader" className={styles.sectionHeader} position="sticky" color="default">
       <List className={styles.list} component="nav">
@@ -109,8 +109,10 @@ export default ({ authorize, match }) => {
       <YAxis stroke={lights ? '#bb8b4b' : '#e2b880'} />
       <CartesianGrid stroke={lights ? '#CCC' : '#FFF'} strokeDasharray="5 5" />
       <Line type="monotone" dataKey="change" stroke="#03a9f4" />
-      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />}
+      <Tooltip contentStyle={{ backgroundColor: lights ? '#FCFCFC' : '#000' }} />
     </LineChart>
     ]}
   </Paper>
 }
+
+export default Stock

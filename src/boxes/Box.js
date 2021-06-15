@@ -64,7 +64,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ match, authorize }) => {
+const Box = ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -147,3 +147,5 @@ export default ({ match, authorize }) => {
     </SwipeableViews>
   </Paper>
 }
+
+export default Box

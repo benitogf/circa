@@ -50,7 +50,7 @@ const mapStocks = (stocks, country) => stocks.filter((s) =>
     change: stock.data.priceChange1Day
   }))
 
-export default ({ authorize, date, country }) => {
+const Stocks = ({ authorize, date, country }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [stocks, socket] = useSubscribe('stocks/*/' + date, authorize)
@@ -109,3 +109,5 @@ export default ({ authorize, date, country }) => {
       <LinearProgress />
     </AppBar>
 }
+
+export default Stocks

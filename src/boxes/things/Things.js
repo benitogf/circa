@@ -13,7 +13,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ match, authorize }) => {
+const Things = ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
   const [things, socket] = useSubscribe('things/' + match.params.id + '/' + account + '/*', authorize)
@@ -34,3 +34,5 @@ export default ({ match, authorize }) => {
     hiddenFields={['index']} />,
   (things && things.length === 0) && <Typography className={styles.empty} key="emptyThings">There are no things on this box yet</Typography>]
 }
+
+export default Things

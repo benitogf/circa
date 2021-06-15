@@ -175,15 +175,15 @@ const footerStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ status }) => {
-  if (status === 'authorized') {
-    return <Redirect to="/dashboard" />
-  }
-
+const Home = ({ status }) => {
   const container = containerStyles()
   const header = headerStyles({ mobile: useMediaQuery(useTheme().breakpoints.down('sm')) })
   const body = bodyStyles({ mobile: useMediaQuery(useTheme().breakpoints.down('xs')) })
   const footer = footerStyles({ mobile: useMediaQuery(useTheme().breakpoints.down('xs')) })
+
+  if (status === 'authorized') {
+    return <Redirect to="/dashboard" />
+  }
 
   return (<div className={container.root}>
     <Paper className={header.root}>
@@ -262,3 +262,5 @@ export default ({ status }) => {
     </Paper>
   </div>)
 }
+
+export default Home

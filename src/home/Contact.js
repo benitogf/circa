@@ -82,7 +82,7 @@ const bodyStyles = makeStyles(theme => ({
   },
 }))
 
-export default () => {
+const Contact = () => {
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
@@ -215,3 +215,5 @@ export default () => {
     </Card>
   </div>))
 }
+
+export default Contact

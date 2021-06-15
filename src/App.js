@@ -30,7 +30,7 @@ const reducer = (state, action) => {
   }
 }
 
-export default () => {
+const App = () => {
   const account = window.localStorage.getItem('account')
   const role = window.localStorage.getItem('role')
   const [state, dispatch] = useReducer(reducer, {
@@ -121,3 +121,5 @@ export default () => {
       <Route component={R404} />
     </Switch></Router></MuiThemeProvider>)
 }
+
+export default App

@@ -31,7 +31,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ authorize }) => {
+const Mails = ({ authorize }) => {
   const [mails, socket] = useSubscribe('mails/*', authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -58,3 +58,5 @@ export default ({ authorize }) => {
     {(mails && mails.length === 0) && <Typography className={styles.empty} component="p">The mail inbox is empty!</Typography>}
   </Paper>
 }
+
+export default Mails

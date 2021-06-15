@@ -52,7 +52,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ match, authorize }) => {
+const Post = ({ match, authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const [post, socket] = useSubscribe('posts/' + match.params.id, authorize)
   const publish = usePublish('posts/' + match.params.id, authorize)
@@ -89,3 +89,5 @@ export default ({ match, authorize }) => {
     {!post ? <LinearProgress /> : <PostForm publish={publish} post={post} authorize={authorize} />}
   </Paper>
 }
+
+export default Post

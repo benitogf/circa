@@ -7,7 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 
 const noop = () => { }
 
-export default ({ value, onChange = noop, disabled, onFocus = noop, onBlur = noop, editing = false, readOnly = false }) => {
+const ReactQuill = ({ value, onChange = noop, disabled, onFocus = noop, onBlur = noop, editing = false, readOnly = false }) => {
   const [editor, setEditor] = useState(null)
   const editorRoot = useCallback(current => {
     if (current && !editor) {
@@ -71,3 +71,5 @@ export default ({ value, onChange = noop, disabled, onFocus = noop, onBlur = noo
     <div ref={editorRoot}></div>
   </div>
 }
+
+export default ReactQuill

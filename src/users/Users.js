@@ -26,7 +26,7 @@ const rootStyles = makeStyles((theme) => ({
   },
 }))
 
-export default ({ authorize }) => {
+const Users = ({ authorize }) => {
   const [users, setUsers] = useState(null)
   const [fetched, setFetched] = useState(null)
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -65,3 +65,5 @@ export default ({ authorize }) => {
     </Paper>
   )
 }
+
+export default Users

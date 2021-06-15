@@ -99,7 +99,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ publish, post, afterCreate, authorize }) => {
+const PostForm = ({ publish, post, afterCreate, authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   // fields
   const [name, setName] = useState('')
@@ -305,3 +305,5 @@ export default ({ publish, post, afterCreate, authorize }) => {
     </form>
   </div>)
 }
+
+export default PostForm

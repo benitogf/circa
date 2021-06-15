@@ -75,7 +75,7 @@ const getIndices = (dates) => dates.reduce((result, current) => {
   return result
 }, [])
 
-export default ({ authorize }) => {
+const Market = ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [dates, socket] = useSubscribe('market/*', authorize)
@@ -181,3 +181,5 @@ export default ({ authorize }) => {
     {date && <Stocks authorize={authorize} date={date} country={country} />}
   </Paper>
 }
+
+export default Market
