@@ -106,7 +106,7 @@ const Market = ({ authorize }) => {
 
   const date = timeIndex ? indices.filter(ind => ind.value === timeIndex)[0].date : null
 
-  if (!timeIndex && indices) {
+  if (!timeIndex && indices && indices.length > 0) {
     setTimeIndex(indices[0].value)
     setActiveStep(indices.length - 1)
   }

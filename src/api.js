@@ -166,24 +166,11 @@ const subscribeReducer = (state, action) => {
   }
 }
 
-export const useSubscribe = (url, authorize) => {
-  const [state, dispatch] = useReducer(subscribeReducer, {
-    socket: null,
-    data: null
-  })
-  if (state.socket) {
-    const socketUrl = state.socket.wsUrl.split(domain + '/')[1]
-    if (socketUrl !== url && socketUrl !== undefined) {
-      state.socket.close()
-      dispatch({ type: 'close' })
-    }
-  }
-  // useEffect(subscribe(url, state.socket, authorize, dispatch), [state.socket])
-  useEffect(() => {
+export const subscribe = (url, socket, authorize, dispatch) =>
+  () => {
     // https://github.com/facebook/react/issues/14326#issuecomment-472043812
     let unmounted = false
     const token = window.localStorage.getItem('token')
-    const socket = state.socket
     if (!socket) {
       // console.log('mount', url)
       dispatch({
@@ -246,7 +233,26 @@ export const useSubscribe = (url, authorize) => {
         socket.close()
       }
     }
-  }, [state.socket, authorize, url])
+  }
+
+export const useSubscribe = (url, authorize) => {
+  const [state, dispatch] = useReducer(subscribeReducer, {
+    socket: null,
+    data: null
+  })
+  if (state.socket) {
+    const socketUrl = state.socket.wsUrl.split(domain + '/')[1]
+    if (socketUrl !== url && socketUrl !== undefined) {
+      state.socket.close()
+      dispatch({ type: 'close' })
+    }
+  }
+  // https://dmitripavlutin.com/react-hooks-stale-closures/
+  // in this case I think that keeping the stale closure makes sense
+  // the curried function ensures that we keep this "stale closure"
+  // to completion by either closing the connection or handling reconnect
+  // https://codesandbox.io/s/eager-pine-8wm3s?file=/src/App.js:0-803
+  useEffect(subscribe(url, state.socket, authorize, dispatch), [state.socket]) // eslint-disable-line react-hooks/exhaustive-deps
   return [state.data, state.socket]
 }
 

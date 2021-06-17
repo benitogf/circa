@@ -79,6 +79,8 @@ const Boxes = ({ authorize }) => {
     index: box.index
   })) : null
 
+  console.log("boxes", boxesMap)
+
   return <Paper className={styles.root} elevation={0}>
     {(() => role === 'admin' || role === 'root' ? [
       <AppBar key="boxesTabsHeader" position="sticky" color="default">
@@ -124,7 +126,7 @@ const Boxes = ({ authorize }) => {
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    ] : [boxesMap && <Table key="boxesTable"
+    ] : [(boxesMap && boxesMap.length > 0) && <Table key="boxesTable"
       rows={boxesMap}
       pagination
       hiddenMobileFields={['created', 'updated']}
