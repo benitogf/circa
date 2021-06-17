@@ -53,7 +53,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ authorize }) => {
+const Boxes = ({ authorize }) => {
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
   // socket
@@ -78,6 +78,8 @@ export default ({ authorize }) => {
     updated: box.updated ? moment.unix(box.updated / 1000000000).format('DD/MM/YY') : '',
     index: box.index
   })) : null
+
+  console.log("boxes", boxesMap)
 
   return <Paper className={styles.root} elevation={0}>
     {(() => role === 'admin' || role === 'root' ? [
@@ -124,7 +126,7 @@ export default ({ authorize }) => {
           <BoxForm publish={publish} afterCreate={() => setTab(0)} />
         </TabContainer>
       </SwipeableViews>
-    ] : [boxesMap && <Table key="boxesTable"
+    ] : [(boxesMap && boxesMap.length > 0) && <Table key="boxesTable"
       rows={boxesMap}
       pagination
       hiddenMobileFields={['created', 'updated']}
@@ -134,3 +136,5 @@ export default ({ authorize }) => {
       ])()}
   </Paper>
 }
+
+export default Boxes

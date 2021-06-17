@@ -76,7 +76,7 @@ const mapPosts = (posts) => posts.map(post => ({
 }))
 
 
-export default ({ authorize }) => {
+const Posts = ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   // socket
   const [posts, socket] = useSubscribe('posts/*', authorize)
@@ -150,3 +150,5 @@ export default ({ authorize }) => {
     </div>
   </Paper>
 }
+
+export default Posts

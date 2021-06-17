@@ -87,7 +87,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ publish, box, afterCreate, authorize }) => {
+const BoxForm = ({ publish, box, afterCreate, authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   // fields
   const [name, setName] = useState('')
@@ -266,3 +266,5 @@ export default ({ publish, box, afterCreate, authorize }) => {
     </form>
   </div>)
 }
+
+export default BoxForm

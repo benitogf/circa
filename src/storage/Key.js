@@ -46,7 +46,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ match, authorize }) => {
+const Key = ({ match, authorize }) => {
   const id = match.params.id.replace(/:/gi, '/')
   const [key] = useSubscribe(id, authorize)
   const styles = rootStyles()
@@ -125,3 +125,5 @@ export default ({ match, authorize }) => {
     </Paper>
   )
 }
+
+export default Key

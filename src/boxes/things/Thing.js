@@ -36,7 +36,7 @@ const rootStyles = makeStyles((theme) => ({
   },
 }))
 
-export default ({ match, authorize }) => {
+const Thing = ({ match, authorize }) => {
   const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
   const [thing, socket] = useSubscribe('things/' + match.params.boxId + '/' + account + '/' + match.params.id, authorize)
@@ -68,3 +68,5 @@ export default ({ match, authorize }) => {
     {thing && <ThingForm boxId={match.params.boxId} publish={publish} thing={thing} authorize={authorize} />}
   </Paper>
 }
+
+export default Thing

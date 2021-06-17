@@ -52,7 +52,7 @@ function glob(pattern, input) {
   return re.test(input)
 }
 
-export default withRouter(({ authorize, history }) => {
+const Storage = withRouter(({ authorize, history }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [keys, setKeys] = useState(null)
@@ -118,3 +118,5 @@ export default withRouter(({ authorize, history }) => {
     {(filteredKeys && filteredKeys.length === 0) && <Typography className={styles.empty} component="p">...</Typography>}
   </Paper>
 })
+
+export default Storage

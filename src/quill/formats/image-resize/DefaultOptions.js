@@ -1,4 +1,4 @@
-export default {
+const DefaultOptions = {
   modules: [
     'DisplaySize',
     'Toolbar',
@@ -57,3 +57,5 @@ export default {
     strokeWidth: '2'
   }
 }
+
+export default DefaultOptions

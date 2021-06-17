@@ -91,7 +91,7 @@ const rootStyles = makeStyles((theme) => ({
   },
 }))
 
-export default ({ match, authorize }) => {
+const User = ({ match, authorize }) => {
   const [fetched, setFetched] = useState(null)
   const [empty, setEmpty] = useState(false)
   const publish = usePublish('user/' + match.params.id, authorize)
@@ -320,3 +320,5 @@ export default ({ match, authorize }) => {
     </Paper>
   ]
 }
+
+export default User

@@ -46,7 +46,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ match, authorize }) => {
+const Mail = ({ match, authorize }) => {
   const [mail] = useSubscribe('mails/' + match.params.id, authorize)
   const styles = rootStyles()
   const [confirm, setConfirm] = useState(false)
@@ -124,3 +124,5 @@ export default ({ match, authorize }) => {
     </Paper>
   )
 }
+
+export default Mail

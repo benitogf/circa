@@ -75,7 +75,7 @@ const getIndices = (dates) => dates.reduce((result, current) => {
   return result
 }, [])
 
-export default ({ authorize }) => {
+const Market = ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [dates, socket] = useSubscribe('market/*', authorize)
@@ -106,7 +106,7 @@ export default ({ authorize }) => {
 
   const date = timeIndex ? indices.filter(ind => ind.value === timeIndex)[0].date : null
 
-  if (!timeIndex && indices) {
+  if (!timeIndex && indices && indices.length > 0) {
     setTimeIndex(indices[0].value)
     setActiveStep(indices.length - 1)
   }
@@ -181,3 +181,5 @@ export default ({ authorize }) => {
     {date && <Stocks authorize={authorize} date={date} country={country} />}
   </Paper>
 }
+
+export default Market

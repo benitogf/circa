@@ -58,7 +58,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ dispatch }) => {
+const Settings = ({ dispatch }) => {
   const [open, setOpen] = useState(false)
   const [lights, setLights] = useState(window.localStorage.getItem('lights') === 'on')
   const account = window.localStorage.getItem('account')
@@ -111,3 +111,5 @@ export default ({ dispatch }) => {
     </Paper>
   </Paper>)
 }
+
+export default Settings

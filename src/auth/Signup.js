@@ -64,7 +64,7 @@ const signupStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ status, authorize }) => {
+const Signup = ({ status, authorize }) => {
   const styles = signupStyles()
 
   const [account, setAccount] = useState('')
@@ -304,3 +304,5 @@ export default ({ status, authorize }) => {
     </Grid>
   </Grid>)
 }
+
+export default Signup

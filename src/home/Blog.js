@@ -35,7 +35,7 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default ({ status }) => {
+const Blog = ({ status }) => {
   const [posts, socket] = useSubscribe('blog')
   const active = socket && socket.readyState === WebSocket.OPEN
   const styles = rootStyles({ status })
@@ -57,3 +57,5 @@ export default ({ status }) => {
     </Paper>
   </Paper>
 }
+
+export default Blog
