@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { withRouter } from 'react-router-dom'
+import { useNavigate  } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Table from '@material-ui/core/Table'
@@ -86,15 +86,15 @@ function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
-export default withRouter(({
+const TableComponent = ({
   rows,
   top = 0,
   pagination = false,
   hiddenFields = [],
   hiddenMobileFields = [],
   link = null,
-  sortDefault = '',
-  history }) => {
+  sortDefault = '' }) => {
+  const navigate = useNavigate()
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights, top, link })
   const theme = useTheme()
@@ -170,7 +170,7 @@ export default withRouter(({
       {filteredRows.map((row, index) => <TableRow key={index}
         className={styles.tableRow}
         hover={link !== null}
-        onClick={() => link ? history.push(link(row)) : null}>
+        onClick={() => link ? navigate(link(row)) : null}>
         {filterKeys.map((v, i) =>
           <TableCell classes={{
             root: styles.tableCellRoot
@@ -198,8 +198,10 @@ export default withRouter(({
     nextIconButtonProps={{
       'aria-label': 'next page',
     }}
-    onChangePage={handleChangePage}
-    onChangeRowsPerPage={handleChangeRowsPerPage}
+    onPageChange={handleChangePage}
+    onRowsPerPageChange={handleChangeRowsPerPage}
   />
   ]
-})
+}
+
+export default TableComponent

@@ -12,6 +12,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts'
 import Table from '../table'
+import { useMatch } from 'react-router-dom'
 
 const rootStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,8 @@ const mapStock = (stocks) => stocks.map((stock) => ({
   date: stock.data.priceDate,
 })).sort((a, b) => moment(a.date).unix() - moment(b.date).unix())
 
-const Stock = ({ authorize, match }) => {
+const Stock = ({ authorize }) => {
+  const match = useMatch('/dashboard/stock/:id')
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [stock, socket] = useSubscribe('stocks/' + match.params.id + '/*', authorize)

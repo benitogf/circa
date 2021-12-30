@@ -1,5 +1,5 @@
-import React, { memo, forwardRef } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { memo } from 'react'
+import { NavLink, useLocation } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
@@ -30,7 +30,8 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-export default memo(({ location, setMobileOpen }) => {
+export default memo(({ setMobileOpen }) => {
+  const location = useLocation()
   const root = rootStyles()
   const lights = window.localStorage.getItem('lights') === 'on'
   const role = window.localStorage.getItem('role')
@@ -40,14 +41,17 @@ export default memo(({ location, setMobileOpen }) => {
   const isBoxes = pathname.length > 2 && pathname[2] === 'boxes'
   const isPost = pathname.length > 3 && pathname[2] === 'post'
   const isPosts = pathname.length > 2 && pathname[2] === 'posts'
+  const isMails = pathname.length > 2 && pathname[2] === 'mails'
+  const isStorage = pathname.length > 2 && pathname[2] === 'storage'
+  const isUsers = pathname.length > 2 && pathname[2] === 'users'
+  const isSettings = pathname.length > 2 && pathname[2] === 'settings'
   const activeLink = lights ? '#efefef' : 'rgb(88, 88, 88)'
   // https://reacttraining.com/react-router/web/api/NavLink
   // this trigers a re-render on each time tick
   // disabling for now
-  const activeStyle = {
+  const activestyle = {
     background: activeLink
   }
-  const NavLinkRef = forwardRef((props, ref) => <NavLink {...props} innerRef={ref} />)
   return <List className={root.menu}>
     <ListItem>
       <Typography className={root.title} variant="h5" component="h3">
@@ -57,13 +61,13 @@ export default memo(({ location, setMobileOpen }) => {
     <Divider />
     <ListItem button
       key={'Dashboard'}
-      component={NavLinkRef}
+      component={NavLink}
       onClick={() => setMobileOpen(false)}
       {...{
         disableTouchRipple: true,
-        exact: true,
-        activeStyle,
-        to: '/dashboard'
+        activestyle,
+        to: '/dashboard',
+        selected: pathname.length === 2
       }}>
       <ListItemIcon>{<Icon>dashboard</Icon>}</ListItemIcon>
       <ListItemText primary={'Dashboard'} />
@@ -71,13 +75,13 @@ export default memo(({ location, setMobileOpen }) => {
     <Divider />
     <ListItem button
       key={'Boxes demo'}
-      component={NavLinkRef}
+      component={NavLink}
       onClick={() => setMobileOpen(false)}
       {...{
         disableTouchRipple: true,
         to: '/dashboard/boxes',
-        activeStyle,
-        isActive: () => isBox || isThing || isBoxes
+        activestyle,
+        selected: isBox || isThing || isBoxes
       }}>
       <ListItemIcon>{<Icon>developer_board</Icon>}</ListItemIcon>
       <ListItemText primary={'Boxes demo'} />
@@ -88,13 +92,13 @@ export default memo(({ location, setMobileOpen }) => {
     {(role === 'admin' || role === 'root') && (
       <ListItem button
         key={'Posts'}
-        component={NavLinkRef}
+        component={NavLink}
         onClick={() => setMobileOpen(false)}
         {...{
           disableTouchRipple: true,
           to: '/dashboard/posts',
-          activeStyle,
-          isActive: () => isPosts || isPost
+          activestyle,
+          selected: isPosts || isPost
         }}>
         <ListItemIcon>{<Icon>library_books</Icon>}</ListItemIcon>
         <ListItemText primary={'Posts'} />
@@ -106,12 +110,13 @@ export default memo(({ location, setMobileOpen }) => {
     {(role === 'admin' || role === 'root') && (
       <ListItem button
         key={'Mails'}
-        component={NavLinkRef}
+        component={NavLink}
         onClick={() => setMobileOpen(false)}
         {...{
           disableTouchRipple: true,
           to: '/dashboard/mails',
-          activeStyle
+          activestyle,
+          selected: isMails
         }}>
         <ListItemIcon>{<Icon>email</Icon>}</ListItemIcon>
         <ListItemText primary={'Mails'} />
@@ -123,12 +128,13 @@ export default memo(({ location, setMobileOpen }) => {
     {role === 'root' && (
       <ListItem button
         key={'Users'}
-        component={NavLinkRef}
+        component={NavLink}
         onClick={() => setMobileOpen(false)}
         {...{
           disableTouchRipple: true,
           to: '/dashboard/users',
-          activeStyle
+          activestyle,
+          selected: isUsers
         }}>
         <ListItemIcon>{<Icon>group</Icon>}</ListItemIcon>
         <ListItemText primary={'Users'} />
@@ -140,12 +146,13 @@ export default memo(({ location, setMobileOpen }) => {
     {role === 'root' && (
       <ListItem button
         key={'Storage'}
-        component={NavLinkRef}
+        component={NavLink}
         onClick={() => setMobileOpen(false)}
         {...{
           disableTouchRipple: true,
           to: '/dashboard/storage',
-          activeStyle
+          activestyle,
+          selected: isStorage
         }}>
         <ListItemIcon>{<Icon>storage</Icon>}</ListItemIcon>
         <ListItemText primary={'Storage'} />
@@ -154,12 +161,13 @@ export default memo(({ location, setMobileOpen }) => {
     <Divider />
     <ListItem button
       key={'Settings'}
-      component={NavLinkRef}
+      component={NavLink}
       onClick={() => setMobileOpen(false)}
       {...{
         disableTouchRipple: true,
         to: '/dashboard/settings',
-        activeStyle
+        activestyle,
+        selected: isSettings
       }}>
       <ListItemIcon>{<Icon>settings</Icon>}</ListItemIcon>
       <ListItemText primary={'Settings'} />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import { useSubscribe, unpublish } from '../api'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
@@ -46,7 +46,8 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-const Mail = ({ match, authorize }) => {
+const Mail = ({ authorize }) => {
+  const match = useMatch('/dashboard/mail/:id')
   const [mail] = useSubscribe('mails/' + match.params.id, authorize)
   const styles = rootStyles()
   const [confirm, setConfirm] = useState(false)
@@ -68,7 +69,7 @@ const Mail = ({ match, authorize }) => {
   }
 
   if (mail.created === 0) {
-    return <Redirect to={"/dashboard/mails"} />
+    return <Navigate to={"/dashboard/mails"} />
   }
 
   return (!mail) ? (<LinearProgress />) : (

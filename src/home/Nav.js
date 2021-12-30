@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, withRouter } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -45,9 +45,10 @@ const navStyles = makeStyles(theme => ({
     fontWeight: '500',
     fontSize: '0.88em'
   }
-}));
+}))
 
-export default withRouter(({ location }) => {
+const Nav = () => {
+  const location = useLocation()
   const mobile = useTheme().breakpoints.down('xs')
   const styles = navStyles({
     mobile,
@@ -91,4 +92,6 @@ export default withRouter(({ location }) => {
       </Grid>
     </Toolbar>
   </AppBar>)
-})
+}
+
+export default Nav

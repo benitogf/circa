@@ -1,5 +1,5 @@
 import React from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Navigate, Link } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Grid from '@material-ui/core/Grid'
@@ -182,7 +182,7 @@ const Home = ({ status }) => {
   const footer = footerStyles({ mobile: useMediaQuery(useTheme().breakpoints.down('xs')) })
 
   if (status === 'authorized') {
-    return <Redirect to="/dashboard" />
+    return <Navigate to="/dashboard" />
   }
 
   return (<div className={container.root}>

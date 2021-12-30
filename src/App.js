@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useAuthorize } from './api'
 
 import Home from './home/Home'
@@ -9,9 +9,10 @@ import Signup from './auth/Signup'
 import Dashboard from './dashboard/Dashboard'
 import R404 from './404'
 import Nav from './home/Nav'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles'
 import lightBlue from '@material-ui/core/colors/lightBlue'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import Logout from './auth/Logout'
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -62,7 +63,7 @@ const App = () => {
     }
   }
 
-  const theme = createMuiTheme({
+  const theme = createTheme({
     palette: {
       type: !lights && status === 'authorized' ? 'dark' : 'light',
       primary: {
@@ -101,25 +102,15 @@ const App = () => {
 
   return (<MuiThemeProvider theme={theme}><Router>
     {status !== "authorized" && <Nav />}
-    <Switch>
-      <Route exact path="/" render={(props) =>
-        <Home {...props} status={status} />} />
-      <Route exact path="/blog" render={(props) =>
-        <Blog {...props} status={status} />} />
-      <Route exact path="/logout" render={() => {
-        window.localStorage.setItem('account', '')
-        window.localStorage.setItem('token', '')
-        dispatch({ type: "status", data: 'unauthorized' })
-        return <Redirect to="/" />
-      }} />
-      <Route exact path="/login" render={(props) =>
-        <Login {...props} status={status} authorize={authorize} />} />
-      <Route exact path="/signup" render={(props) =>
-        <Signup {...props} status={status} authorize={authorize} />} />
-      <Route path="/dashboard" render={(props) =>
-        <Dashboard {...props} status={status} authorize={authorize} dispatch={dispatch} />} />
+    <Routes>
+      <Route exact path="/" element={<Home status={status} />} />
+      <Route exact path="/blog" element={<Blog status={status} />} />
+      <Route exact path="/logout" element={<Logout dispatch={dispatch}/>} />
+      <Route exact path="/login" element={<Login status={status} authorize={authorize} />} />
+      <Route exact path="/signup" element={<Signup status={status} authorize={authorize} />} />
+      <Route path="/dashboard/*" element={<Dashboard status={status} authorize={authorize} dispatch={dispatch} />} />
       <Route component={R404} />
-    </Switch></Router></MuiThemeProvider>)
+    </Routes></Router></MuiThemeProvider>)
 }
 
 export default App

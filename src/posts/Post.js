@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import { useSubscribe, usePublish } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -52,7 +52,8 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-const Post = ({ match, authorize }) => {
+const Post = ({ authorize }) => {
+  const match = useMatch('/dashboard/post/:id')
   const lights = window.localStorage.getItem('lights') === 'on'
   const [post, socket] = useSubscribe('posts/' + match.params.id, authorize)
   const publish = usePublish('posts/' + match.params.id, authorize)
@@ -63,16 +64,16 @@ const Post = ({ match, authorize }) => {
 
   // this is not a post
   if (post && post.index === '') {
-    return (<Redirect to={"/dashboard/posts"} />)
+    return (<Navigate to={"/dashboard/posts"} />)
   }
 
   return <Paper className={styles.root} elevation={0}>
     <AppBar position="sticky" color="default">
       <List className={styles.list} component="nav">
         <ListItem className={styles.listHeader}>
-          {(() => post && post.data ?
-            <ListItemText className={styles.listHeaderText} primary={post.data.name} /> :
-            <CircularProgress color="inherit" size={24} />)()}
+          {!post && <CircularProgress color="inherit" size={24} />}
+          {(post && post.data) &&
+            <ListItemText className={styles.listHeaderText} primary={post.data.name} />}
           <a className={styles.blogPreviewLink} title="blog preview" href="/blog" target="_blank"><Icon>art_track</Icon></a>
         </ListItem>
       </List>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Redirect, withRouter } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import { useSubscribe } from '../api'
 import moment from 'moment'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -100,7 +100,8 @@ const appStyles = makeStyles((theme) => ({
 
 const DateDisplay = ({ time }) => (moment.unix(time / 1000000000).format('dddd, MMMM Do Y LTS'))
 
-export default withRouter(({ location, status, authorize, dispatch }) => {
+const Dashboard = ({ status, authorize, dispatch }) => {
+  const location = useLocation()
   const [time, socket] = useSubscribe(null, authorize)
   const active = socket && socket.readyState === WebSocket.OPEN
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -132,7 +133,7 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
 
 
   if (status === 'unauthorized') {
-    return (<Redirect to="/login" />)
+    return (<Navigate to="/login" />)
   }
 
   return (!time) ? (<LinearProgress />) : (
@@ -258,4 +259,6 @@ export default withRouter(({ location, status, authorize, dispatch }) => {
       <Router dispatch={dispatch} authorize={authorize} />
     </div>
   )
-})
+}
+
+export default Dashboard

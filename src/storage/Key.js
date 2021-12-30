@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import { useSubscribe, unpublish } from '../api'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Typography from '@material-ui/core/Typography'
@@ -46,7 +46,8 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-const Key = ({ match, authorize }) => {
+const Key = ({ authorize }) => {
+  const match = useMatch('/dashboard/storage/:id')
   const id = match.params.id.replace(/:/gi, '/')
   const [key] = useSubscribe(id, authorize)
   const styles = rootStyles()
@@ -69,7 +70,7 @@ const Key = ({ match, authorize }) => {
   }
 
   if (key.created === 0) {
-    return <Redirect to={"/dashboard/storage"} />
+    return <Navigate to={"/dashboard/storage"} />
   }
 
   return (!key) ? (<LinearProgress />) : (
