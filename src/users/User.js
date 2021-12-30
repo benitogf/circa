@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import { fetch, usePublish, unpublish } from '../api'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -91,7 +91,8 @@ const rootStyles = makeStyles((theme) => ({
   },
 }))
 
-const User = ({ match, authorize }) => {
+const User = ({ authorize }) => {
+  const match = useMatch('/dashboard/user/:id')
   const [fetched, setFetched] = useState(null)
   const [empty, setEmpty] = useState(false)
   const publish = usePublish('user/' + match.params.id, authorize)
@@ -189,7 +190,7 @@ const User = ({ match, authorize }) => {
   getUsers()
 
   if (empty) {
-    return (<Redirect to="/dashboard/users" />)
+    return (<Navigate to="/dashboard/users" />)
   }
 
   return [

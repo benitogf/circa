@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { fetch } from '../api'
-import { withRouter } from 'react-router-dom'
+// import { useNavigate, withRouter } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import List from '@material-ui/core/List'
@@ -52,7 +52,7 @@ function glob(pattern, input) {
   return re.test(input)
 }
 
-const Storage = withRouter(({ authorize, history }) => {
+const Storage = ({ authorize }) => {
   const lights = window.localStorage.getItem('lights') === 'on'
   const styles = rootStyles({ lights })
   const [keys, setKeys] = useState(null)
@@ -117,6 +117,6 @@ const Storage = withRouter(({ authorize, history }) => {
       rows={filteredKeys.map(key => ({ key }))} />}
     {(filteredKeys && filteredKeys.length === 0) && <Typography className={styles.empty} component="p">...</Typography>}
   </Paper>
-})
+}
 
 export default Storage

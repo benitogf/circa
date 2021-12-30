@@ -1,6 +1,6 @@
 
 import React, { memo } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Settings from './Settings'
 import Boxes from '../boxes/Boxes'
 import Box from '../boxes/Box'
@@ -20,65 +20,30 @@ import Stock from '../market/Stock'
 
 export default memo(({ dispatch, authorize }) => {
   const role = window.localStorage.getItem('role')
-  return <Switch>
-    <Route exact path="/dashboard" render={() =>
-      <Market authorize={authorize} />
+  return <Routes>
+    <Route path="/" element={<Market authorize={authorize} />} />
+    <Route exact path="/boxes" element={<Boxes authorize={authorize} />} />
+    <Route exact path="/settings" element={<Settings dispatch={dispatch} />} />
+    <Route exact path="/stock/:id" element={<Stock authorize={authorize} />} />
+    {(role === 'admin' || role === 'root') &&
+      <Route exact path="/post/:id" element={<Post authorize={authorize} />} />}
+    {(role === 'admin' || role === 'root') &&
+      <Route exact path="/posts" element={<Posts authorize={authorize} />} />}
+    {(role === 'admin' || role === 'root') &&
+      <Route exact path="/mails" element={<Mails authorize={authorize} />} />}
+    {role === 'root' &&
+      <Route exact path="/user/:id" element={<User authorize={authorize} />} />}
+    {role === 'root' &&
+      <Route exact path="/users" element={<Users authorize={authorize} />} />}
+    {role === 'root' &&
+      <Route exact path="/storage" element={<Storage authorize={authorize} />} />}
+    {(role === 'admin' || role === 'root') &&
+      <Route path="/mail/:id" element={<Mail authorize={authorize} />} />}
+    <Route path="/box/:boxId/thing/:id" element={<Thing  authorize={authorize} />} />
+    <Route path="/box/:id" element={<Box authorize={authorize} />
     } />
-    <Route exact path="/dashboard/boxes" render={() =>
-      <Boxes authorize={authorize} />
-    } />
-    <Route exact path="/dashboard/settings" render={() =>
-      <Settings dispatch={dispatch} />
-    } />
-    <Route exact path="/dashboard/stock/:id" render={({ match }) =>
-      <Stock match={match} authorize={authorize} />
-    } />
-    {(role === 'admin' || role === 'root') && (
-      <Route exact path="/dashboard/post/:id" render={({ match }) =>
-        <Post match={match} authorize={authorize} />
-      } />
-    )}
-    {(role === 'admin' || role === 'root') && (
-      <Route exact path="/dashboard/posts" render={() =>
-        <Posts authorize={authorize} />
-      } />
-    )}
-    {(role === 'admin' || role === 'root') && (
-      <Route exact path="/dashboard/mails" render={() =>
-        <Mails authorize={authorize} />
-      } />
-    )}
-    {role === 'root' && (
-      <Route exact path="/dashboard/user/:id" render={({ match }) =>
-        <User match={match} authorize={authorize} />
-      } />
-    )}
-    {role === 'root' && (
-      <Route exact path="/dashboard/users" render={() =>
-        <Users authorize={authorize} />
-      } />
-    )}
-    {role === 'root' && (
-      <Route exact path="/dashboard/storage" render={() =>
-        <Storage authorize={authorize} />
-      } />
-    )}
-    {(role === 'admin' || role === 'root') && (
-      <Route path="/dashboard/mail/:id" render={({ match }) =>
-        <Mail match={match} authorize={authorize} />
-      } />
-    )}
-    <Route path="/dashboard/box/:boxId/thing/:id" render={({ match }) =>
-      <Thing match={match} authorize={authorize} />
-    } />
-    <Route path="/dashboard/box/:id" render={({ match }) =>
-      <Box match={match} authorize={authorize} />
-    } />
-    {role === 'root' && (
-      <Route exact path="/dashboard/storage/:id" render={({ match }) =>
-        <Key match={match} authorize={authorize} />
-      } />
-    )}
-    <Route component={R404} />
-  </Switch>
+    {role === 'root' &&
+      <Route exact path="/storage/:id" element={<Key authorize={authorize} />} />}
+    <Route element={<R404/>} />
+  </Routes>
 })

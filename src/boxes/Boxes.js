@@ -79,8 +79,6 @@ const Boxes = ({ authorize }) => {
     index: box.index
   })) : null
 
-  console.log("boxes", boxesMap)
-
   return <Paper className={styles.root} elevation={0}>
     {(() => role === 'admin' || role === 'root' ? [
       <AppBar key="boxesTabsHeader" position="sticky" color="default">

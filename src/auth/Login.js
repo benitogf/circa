@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { Navigate, Link } from 'react-router-dom'
 import { api } from '../api'
 import { makeStyles } from '@material-ui/core/styles'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
@@ -92,7 +92,7 @@ const Login = ({ status, authorize }) => {
   }
 
   if (status === 'authorized') {
-    return (<Redirect to="/dashboard" />)
+    return (<Navigate to="/dashboard" />)
   }
 
   return (<Grid className={styles.container} container spacing={4}>

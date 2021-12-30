@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import moment from 'moment'
 import { useSubscribe, usePublish } from '../api'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
@@ -64,7 +64,8 @@ const rootStyles = makeStyles((theme) => ({
   }
 }))
 
-const Box = ({ match, authorize }) => {
+const Box = ({ authorize }) => {
+  const match = useMatch("/dashboard/box/:id")
   const account = window.localStorage.getItem('account')
   const role = window.localStorage.getItem('role')
   const lights = window.localStorage.getItem('lights') === 'on'
@@ -87,7 +88,7 @@ const Box = ({ match, authorize }) => {
 
   // this is not a box
   if (box && box.index === '') {
-    return (<Redirect to="/dashboard/boxes" />)
+    return (<Navigate to="/dashboard/boxes" />)
   }
 
   return <Paper className={styles.root} elevation={0}>

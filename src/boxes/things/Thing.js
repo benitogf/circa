@@ -1,6 +1,6 @@
 import React from 'react'
 import moment from 'moment'
-import { Redirect } from 'react-router-dom'
+import { Navigate, useMatch } from 'react-router-dom'
 import { useSubscribe, usePublish } from '../../api'
 import { makeStyles } from '@material-ui/core/styles'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -36,7 +36,8 @@ const rootStyles = makeStyles((theme) => ({
   },
 }))
 
-const Thing = ({ match, authorize }) => {
+const Thing = ({ authorize }) => {
+  const match = useMatch("/dashboard/box/:boxId/thing/:id")
   const account = window.localStorage.getItem('account')
   const lights = window.localStorage.getItem('lights') === 'on'
   const [thing, socket] = useSubscribe('things/' + match.params.boxId + '/' + account + '/' + match.params.id, authorize)
@@ -46,7 +47,7 @@ const Thing = ({ match, authorize }) => {
 
   // this is not a box
   if (thing && thing.index === '') {
-    return (<Redirect to={"/dashboard/box/" + match.params.boxId} />)
+    return (<Navigate to={"/dashboard/box/" + match.params.boxId} />)
   }
 
   return <Paper className={styles.root} elevation={0}>
