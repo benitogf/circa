@@ -96,7 +96,7 @@ const Boxes = ({ authorize }) => {
           component="nav">
           <ListItem className={styles.listHeader}>
             {(() => tab === 0 ?
-              <ListItemText className={styles.listHeaderText} primary={'Available boxes'} /> :
+              <ListItemText className={styles.listHeaderText} primary={'Mostly boxes'} /> :
               <ListItemText className={styles.listHeaderText} primary={'Box details'} />)()}
           </ListItem>
         </List>
