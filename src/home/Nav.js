@@ -65,7 +65,7 @@ const Nav = () => {
         <Typography className={styles.subtitle} component="p">Data engeneering</Typography>
       </div>
       <Grid direction="row"
-        justify="flex-end"
+        justifyContent="flex-end"
         alignItems="center"
         container
         spacing={4}>

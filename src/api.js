@@ -246,6 +246,11 @@ export const useSubscribe = (url, authorize) => {
       state.socket.close()
       dispatch({ type: 'close' })
     }
+
+    // this handles fast refresh on development server
+    if (state.socket.readyState === WebSocket.CLOSED || state.socket.readyState === WebSocket.CLOSING) {
+      dispatch({ type: 'close' })
+    }
   }
   // https://dmitripavlutin.com/react-hooks-stale-closures/
   // in this case I think that keeping the stale closure makes sense

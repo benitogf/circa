@@ -186,8 +186,8 @@ const Contact = () => {
           <TextField
             required
             multiline
-            rows="5"
-            rowsMax="20"
+            minRows="5"
+            maxRows="20"
             margin="dense"
             id="message"
             label="message"
