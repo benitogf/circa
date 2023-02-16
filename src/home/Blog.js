@@ -7,7 +7,8 @@ import rootStyles from '../styles/Blog';
 
 
 const RenderLineProgress = ({post, active}) => {
-  return (!post || !active) && <LinearProgress />;
+  const isNotActive = !post || !active;
+  return isNotActive && <LinearProgress />;
 };
 
 
@@ -20,7 +21,6 @@ const RenderMessage = ({posts, styles}) => {
 
 const RenderView = ({posts, styles}) => {
   const isPosts = posts && posts.length !== 0;
-  
   return (
     isPosts && posts.map((post, index) => {
       return <Paper key={index} elevation={0}>
